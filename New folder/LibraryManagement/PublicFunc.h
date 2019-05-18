@@ -8,12 +8,19 @@
 #include <conio.h>
 using namespace std;
 
+struct Time
+{
+	int Hrs;
+	int Mins;
+	int Secs;
+};
 struct Date
 {
 	int d;
 	int m;
 	int y;
 };
+void DisplayTime(Time time);
 string HidePassWordV2(string password); // hàm ẩn 1 phần password 
 int FileSize(string file); // hàm lấy kích thước file
 Date GetDay(int x,int y); // hàm lấy ngày tháng năm
