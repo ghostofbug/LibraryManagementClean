@@ -15,7 +15,12 @@ struct BorrowForm
 	Time TimeCreate;
 	int BookBorrowed;
 };
-void CreateBorrowForm(list <BorrowForm> &bf, list<Reader> reader);
-void FindReaderInfo(BorrowForm &Borrowbook, list<Reader>l);
+string FindName(string ISBN, list<Book>b);
+void CreateBorrowForm(list <BorrowForm> &bf);
+void FindBorrowInfo(BorrowForm &Borrowbook);
+void FindBookInfo(BorrowForm &Borrowbook, list<Book>b);
+void DisplayBorrowBookInfo(BorrowForm Borrowbook);
+void PrintForm(BorrowForm Borrowbook);
+void BorrowFormToFile(list<BorrowForm>bf);
 #endif
 

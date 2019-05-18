@@ -30,93 +30,120 @@ void GrantPermission(UserList &list, NodeUser * temp, NodeUser *temp1)
 {
 
 	system("cls");
-	bool check = false;
-	cout << "   ---------------------------------" << endl;
-	cout << "   |      DANH SACH NGUOI DUNG     |" << endl;
-	cout << "   ---------------------------------" << endl;
-	cout << "---------------------------------------------------------------------------------------------------------------------------" << endl;
-	cout << "|     UserID      |    Password     |     CMND     |       Dia chi        |        Email         |  Chuc vu  | Tinh trang |" << endl;
-	cout << "---------------------------------------------------------------------------------------------------------------------------" << endl;
-	for (temp = list.listhead; temp != NULL; temp = temp->next)
+	int runtime = 0;
+	for (;;)
 	{
-		cout << "| ";
-		cout << setw(15) << left << temp->node.UserId;
-		cout << " | ";
-		cout << setw(15) << HidePassWordV2(temp->node.PassWord);
-		cout << " | ";
-		cout << setw(12) << temp->node.Info.CitizenId;
-		cout << " | ";
-		cout << setw(20) << temp->node.Info.Address;
-		cout << " | ";
-		cout << setw(20) << temp->node.Info.Email;
-		cout << " | ";
-		if (temp->node.Stats == 0)
-		{
-			if (temp->node.Pos == 1)
-			{
-				cout << setw(9) << "Admin";
-			}
-			else if (temp->node.Pos == 0)
-			{
-				cout << setw(9) << "Quan ly";
-			}
-			else
-			{
-				cout << setw(9) << "Nhan vien";
-			}
-			cout << " | ";
-			cout << setw(10) << "Activated";
-		}
-		else
-		{
-			cout << setw(9) << " ";
-			cout << " | ";
-			cout << setw(10) << "Blocked";
-		}
-		cout << " |" << endl;
+		bool check = false;
+		system("cls");
+		cout << "   ---------------------------------" << endl;
+		cout << "   |      DANH SACH NGUOI DUNG     |" << endl;
+		cout << "   ---------------------------------" << endl;
 		cout << "---------------------------------------------------------------------------------------------------------------------------" << endl;
-	}
-	string text;
-	cout << "Nhan ESC de thoat, nhan bat ky de tiep tuc: ";
-	int check1;
-	check1 = _getch();
-	if (check1 != 27)
-	{
-		cin.ignore();
-		cout << endl << "Nhap UserId can phan quyen: ";
-		getline(cin, text);
-		for (temp1 = list.listhead; temp1 != NULL; temp1 = temp1->next)
+		cout << "|     UserID      |    Password     |     CMND     |       Dia chi        |        Email         |  Chuc vu  | Tinh trang |" << endl;
+		cout << "---------------------------------------------------------------------------------------------------------------------------" << endl;
+		for (temp = list.listhead; temp != NULL; temp = temp->next)
 		{
-			NodeUser* temp2 = new NodeUser;
-			if (text.compare(temp1->node.UserId) == 0 && CheckAdmin(temp1->node.UserId, list, temp2) == false)
+			cout << "| ";
+			cout << setw(15) << left << temp->node.UserId;
+			cout << " | ";
+			cout << setw(15) << HidePassWordV2(temp->node.PassWord);
+			cout << " | ";
+			cout << setw(12) << temp->node.Info.CitizenId;
+			cout << " | ";
+			cout << setw(20) << temp->node.Info.Address;
+			cout << " | ";
+			cout << setw(20) << temp->node.Info.Email;
+			cout << " | ";
+			if (temp->node.Stats == 0)
 			{
-				cout << "Phan quyen (0: Quan ly /-1: Nhan vien /so khac: khoa tai khoan): ";
-				string text = "Phan quyen (0: Quan ly /-1: Nhan vien /so khac: khoa tai khoan): ";
-				COORD coord;
-				coord.X = wherex();
-				coord.Y = wherey();
-				while (!(cin >> temp1->node.Pos))
+				if (temp->node.Pos == 1)
 				{
-					gotoxy(coord.X, coord.Y);
-					cin.clear();
-					cin.ignore();
+					cout << setw(9) << "Admin";
 				}
-				if (temp1->node.Pos != 0 && temp1->node.Pos != -1)
+				else if (temp->node.Pos == 0)
 				{
-					temp1->node.Stats = 1;
-					temp1->node.Pos = -2;
+					cout << setw(9) << "Quan ly";
 				}
 				else
 				{
-					temp1->node.Stats = 0;
+					cout << setw(9) << "Nhan vien";
 				}
-				ListToFile(list);
-				check = true;
+				cout << " | ";
+				cout << setw(10) << "Activated";
 			}
+			else
+			{
+				cout << setw(9) << " ";
+				cout << " | ";
+				cout << setw(10) << "Blocked";
+			}
+			cout << " |" << endl;
+			cout << "---------------------------------------------------------------------------------------------------------------------------" << endl;
 		}
-		if (check == false)
+		string text;
+		string validate;
+		int y = wherey();
+		
+		cout << "Nhan Y de phan quyen,nhan bat ky de thoat: ";
+		if (runtime == 0)
 		{
-			cout << "Khong the thuc hien! Nguoi dung la Admin/khong ton tai!" << endl;
+			cin.ignore();
+		}
+		getline(cin, validate);
+		if (validate.compare("y") == 0 || validate.compare("Y") == 0)
+		{
+			gotoxy(0, y);
+			for (int i = 0; i < (StringSize("Nhan Y de phan quyen,nhan bat ky de thoat: ") + StringSize(validate)); i++)
+			{
+				cout << " ";
+			}
+			gotoxy(0, y);
+			cout << "Nhap UserId can phan quyen: ";
+			getline(cin, text);
+			for (temp1 = list.listhead; temp1 != NULL; temp1 = temp1->next)
+			{
+				NodeUser* temp2 = new NodeUser;
+				if (text.compare(temp1->node.UserId) == 0 && CheckAdmin(temp1->node.UserId, list, temp2) == false)
+				{
+					cout << "Phan quyen (0: Quan ly /-1: Nhan vien /so khac: khoa tai khoan): ";
+					string text = "Phan quyen (0: Quan ly /-1: Nhan vien /so khac: khoa tai khoan): ";
+					COORD coord;
+					coord.X = wherex();
+					coord.Y = wherey();
+					while (!(cin >> temp1->node.Pos))
+					{
+						gotoxy(coord.X, coord.Y);
+						cin.clear();
+						cin.ignore();
+					}
+					if (temp1->node.Pos != 0 && temp1->node.Pos != -1)
+					{
+						temp1->node.Stats = 1;
+						temp1->node.Pos = -2;
+					}
+					else
+					{
+						temp1->node.Stats = 0;
+					}
+					ListToFile(list);
+					check = true;
+					cin.ignore();
+				}
+				else
+				{
+
+				}
+			}
+			if (check == false)
+			{
+				cout << "Khong the thuc hien! Nguoi dung la Admin/khong ton tai!" << endl;
+				system("pause");
+			}
+			runtime++;
+		}
+		else
+		{
+			break;
 		}
 	}
 }
@@ -155,16 +182,6 @@ bool CheckManager(string signinuser, UserList list, NodeUser *temp)
 		}
 	}
 	return false;
-}
-string EncryptPassWord(string pass)
-{
-	char key[14] = { 'A','B','C','D','E','F','G','J','Y','X','Z','W','I','S' };
-	string encrypt = pass;
-	for (int i = 0; i < encrypt.size(); i++)
-	{
-		encrypt[i] = pass[i] ^ key[i % (sizeof(key) / sizeof(char))];
-	}
-	return encrypt;
 }
 void ListToFile(UserList list)
 {

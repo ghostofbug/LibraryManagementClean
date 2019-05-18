@@ -6,6 +6,8 @@
 #include <fstream>
 #include <Windows.h>
 #include <conio.h>
+#include <thread>
+#include <chrono>
 using namespace std;
 
 struct Time
@@ -36,6 +38,7 @@ void DisplayIntAfterError(int x, int y);// hàm hiện thị lỗi sai kiểu in
 int StringSize(string text); // hàm lấy kich thước chuỗi 
 int wherey(); // hàm lấy tọa độ y trên màn console nguồn http://www.cplusplus.com/
 int wherex();// hàm lấy tọa độ x trên màn console http://www.cplusplus.com/
-
+void LoadingDot();
+string EncryptPassWord(string pass);
 #endif
 

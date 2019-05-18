@@ -1,4 +1,14 @@
 #include "PublicFunc.h"
+string EncryptPassWord(string pass)
+{
+	char key[14] = { 'A','B','C','D','E','F','G','J','Y','X','Z','W','I','S' };
+	string encrypt = pass;
+	for (int i = 0; i < encrypt.size(); i++)
+	{
+		encrypt[i] = pass[i] ^ key[i % (sizeof(key) / sizeof(char))];
+	}
+	return encrypt;
+}
 string HidePassWordV2(string password)
 {
 	string hidepassword = password;
@@ -55,6 +65,27 @@ void DisplayAfterError(int x, int y,string &text,bool Check)
 		cout << text;
 	}
 }
+void LoadingDot()
+{
+	cout << "Dang tai du lieu, xin doi trong giay lat ";
+	
+	for (int i = 0; i <3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			cout << ".";
+			cout.flush();
+			std::this_thread::sleep_for(std::chrono::seconds(1));
+		}
+		gotoxy(StringSize("Dang tai du lieu, xin doi trong giay lat"), wherey());
+		for (int k = 0;k < 6; k++)
+		{
+			cout << " ";
+		}
+		gotoxy(StringSize("Dang tai du lieu, xin doi trong giay lat "),wherey());
+		
+	}
+}
 void gotoxy(int x, int y)
 {
 	COORD coord;
@@ -70,7 +101,7 @@ string HidePassword(int x,int y)
 	{
 		keypressed = NULL;
 		keypressed = _getch();
-		if (password.size()<16 && (keypressed >= 60 && keypressed <= 90) || (keypressed >= 97 && keypressed <= 122) || (keypressed >= 48 && keypressed <= 57) || keypressed == 32)
+		if (password.size()<16 && (keypressed >= 60 && keypressed <= 90) || (keypressed >= 97 && keypressed <= 122) || (keypressed >= 48 && keypressed <= 57) || keypressed == 32 || keypressed ==(int)',')
 		{
 			password += keypressed;
 			cout << "*";
@@ -220,5 +251,33 @@ void DisplaySex(int x)
 	else
 	{
 		cout << "Khac";
+	}
+}
+void DisplayTime(Time time)
+{
+	cout << time.Hrs << ":";
+	if (time.Mins < 10)
+	{
+		cout << "0" << time.Mins << ":";
+		if (time.Secs < 10)
+		{
+			cout << "0" << time.Secs << "  ";
+		}
+		else
+		{
+			cout << time.Secs << "  ";
+		}
+	}
+	else if (time.Mins >= 10)
+	{
+		cout << time.Mins << ":";
+		if (time.Secs < 10)
+		{
+			cout << "0" << time.Secs << "  ";
+		}
+		else
+		{
+			cout << time.Secs << "  ";
+		}
 	}
 }

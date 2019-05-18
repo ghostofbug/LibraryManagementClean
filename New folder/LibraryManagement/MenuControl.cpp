@@ -241,8 +241,9 @@ void MenuFunc()
 	cout << "   ************************************" << endl;
 	cout << endl << "Chon chuc nang: ";
 }
-void RunMenuFunc(string SignInUserID, UserList &list)
+void RunMenuFunc(string SignInUserID, UserList &List)
 {
+	list <BorrowForm> bf;
 	int direct1;
 	do
 	{
@@ -250,27 +251,26 @@ void RunMenuFunc(string SignInUserID, UserList &list)
 		direct1 = GetDirect();
 		if (direct1 == 1)
 		{
-			RunMenuUserManage(SignInUserID, list);
+			RunMenuUserManage(SignInUserID, List);
 			system("pause");
 			system("cls");
 		}
 		if (direct1 == 2)
 		{
-			RunMenuReader(SignInUserID, list);
+			RunMenuReader(SignInUserID, List);
 			system("pause");
 			system("cls");
 		}
 		if (direct1 == 3)
 		{
-			RunMenuBookManage(SignInUserID, list);
+			RunMenuBookManage(SignInUserID, List);
 			system("pause");
 			system("cls");
 		}
 		if (direct1 == 4)
 		{
 			cout << "4. Lap phieu muon sach" << endl;
-
-
+			CreateBorrowForm(bf);
 			system("pause");
 			system("cls");
 		}

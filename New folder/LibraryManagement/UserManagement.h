@@ -48,14 +48,14 @@ void RunMenuSignIn(UserList &list); // hàm chạy menu đăng nhập
 bool SignIn(string ID, string Pass, UserList list, NodeUser *temp); // hàm kt đăng nhập
 bool CheckCreateAccount(UserList list, string registeruser, NodeUser *temp); // hàm kt tài khoản đã tồn tại chưa
 void ChangePassword(UserList &list, string signinuser); // hàm thay đổi password
-void RunMenuFunc(string SignInUserID, UserList &list); // hàm chạy menu tính năng
+void RunMenuFunc(string SignInUserID, UserList &List); // hàm chạy menu tính năng
 void RunMenuUserManage(string SignInUserID, UserList &list); // hàm chạy menu quản lý người dùng
 bool CheckSame(string username, string password); // hàm kiểm tra ID và mật khẩu có trùng không
 bool CheckIDCard(string ID); // Hàm kiểm tra CMND 
 int CountIDCard(string ID); // Hàm đếm chữ số CMND
 User Admin(); // hàm khởi tạo admin hệ thống
 void CreateAdmin(UserList &list, User ADmin, NodeUser *NodeAdmin); // hàm tạo addmin hệ thống
-string EncryptPassWord(string pass); // hàm mã hóa mật khẩu vào file
+ // hàm mã hóa mật khẩu vào file
 void ListToFile(UserList list); //hàm đưa ds vào file
 void AddFileTolist(UserList &list, NodeUser *user); // hàm đưa data từ file vao list
 bool CheckAdmin(string signinuser, UserList list, NodeUser *temp); //hàm kt nguoi dang nhap la admin 
