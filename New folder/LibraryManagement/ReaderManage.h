@@ -1,6 +1,6 @@
 ﻿#ifndef _READERMANAGE_H__
 #define _READERMANAGE_H__
-
+#pragma once
 #include <iostream>
 #include <iomanip>
 #include <list>

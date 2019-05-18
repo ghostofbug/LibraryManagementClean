@@ -34,27 +34,15 @@ int wherey()
 }
 int StringSize(string text)
 {
-	return text.size();
+	int size;
+	size = static_cast<int>(text.size());
+	return size;
 }
 void DisplayIntAfterError(int x, int y)
 {
 	gotoxy(x, y);
 }
-void DisplayAfterError(int x, int y,string &text,bool Check)
-{
-	string text_temp = text;
-	text = "";
-	gotoxy(x, y);
-	if (Check == false)
-	{
-		cout << text_temp;
-		gotoxy(x + text_temp.size(), y);
-	}
-	else
-	{
-		cout << text;
-	}
-}
+
 void gotoxy(int x, int y)
 {
 	COORD coord;
@@ -177,6 +165,34 @@ Date PlusDay(Date date, int d, int m, int y) {
 		date.d = MaxDay[date.m];
 	}
 	return date;
+}
+void DisplayTime(Time time)
+{
+		cout << time.Hrs << ":";
+		if (time.Mins < 10)
+		{
+			cout << "0" << time.Mins << ":";
+			if (time.Secs < 10)
+			{
+				cout << "0" << time.Secs << "  ";
+			}
+			else
+			{
+				cout << time.Secs << "  ";
+			}
+		}
+		else if (time.Mins >= 10)
+		{
+			cout << time.Mins << ":";
+			if (time.Secs < 10)
+			{
+				cout << "0" << time.Secs << "  ";
+			}
+			else
+			{
+				cout <<time.Secs << "  ";
+			}
+		}
 }
 void DisplayDay(Date date)
 {

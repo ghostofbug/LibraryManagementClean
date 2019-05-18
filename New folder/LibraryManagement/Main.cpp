@@ -1,18 +1,19 @@
 #include "HeaderManagement.h"
 int main()
 {
-	UserList list;
+	UserList List;
+	
 	User admin;
 	NodeUser *ADmin = new NodeUser;
 	NodeUser *User = new NodeUser;
 	ofstream systemadmin;
 	systemadmin.open("useraccount.txt", ios_base::out | ios_base::app);
-	InitializeUserList(list);
-	CreateAdmin(list, admin,ADmin);
+	InitializeUserList(List);
+	CreateAdmin(List, admin,ADmin);
 	delete ADmin;
-	AddFileTolist(list,User);
-	RunMenuSignIn(list);
-	DeleteList(list);
+	AddFileTolist(List,User);
+	RunMenuSignIn(List);
+	DeleteList(List);
 	systemadmin.close();
 	system("pause");
 

@@ -98,6 +98,7 @@ void UpdateReaderList(list <Reader> &l)
 		getline(fin, x, '\n');
 		l.push_back(temp);
 	}
+	fin.close();
 }
 void UpdateReaderFile(list <Reader> l)
 {
@@ -135,10 +136,12 @@ bool CheckCreateReader(string ID)
 	{
 		if (ID.compare(x) == 0)
 		{
+			fin.close();
 			return false;
 		}
 		getline(fin, x, '\n');
 	}
+	fin.close();
 	return true;
 }
 void CreateReader(list <Reader> &l)

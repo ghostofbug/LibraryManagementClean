@@ -10,5 +10,6 @@ using namespace std;
 #include "BookManage.h"
 #include "PublicFunc.h"
 #include"ReaderManage.h"
+#include "FormAndCharge.h"
 
 #endif

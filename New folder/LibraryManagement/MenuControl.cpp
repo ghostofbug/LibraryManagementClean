@@ -171,7 +171,7 @@ string GetInput()
 	getline(cin, Input);
 	return Input;
 }
-void RunMenuSignIn(UserList &list)
+void RunMenuSignIn(UserList &List)
 {
 	User user;
 	NodeUser *temp = new NodeUser;
@@ -194,11 +194,13 @@ void RunMenuSignIn(UserList &list)
 			y = static_cast<int>(y);
 			getPass = HidePassword(x,y);
 			NodeUser *temp = new NodeUser;
-			if (SignIn(getUserId, getPass, list, temp) == true && CheckBlocked(getUserId, list, temp) == true)
+			if (SignIn(getUserId, getPass, List, temp) == true && CheckBlocked(getUserId, List, temp) == true)
 			{
 				delete temp;
 				system("cls");
-				RunMenuFunc(getUserId, list);
+				list <Reader> l;
+				list <Book> b;
+				RunMenuFunc(getUserId, List,l,b);
 			}
 			else
 			{
@@ -241,36 +243,36 @@ void MenuFunc()
 	cout << "   ************************************" << endl;
 	cout << endl << "Chon chuc nang: ";
 }
-void RunMenuFunc(string SignInUserID, UserList &list)
+void RunMenuFunc(string SignInUserID, UserList &List, list <Reader> &l,list <Book> &b)
 {
 	int direct1;
+	list<BorrowForm>bf;
 	do
 	{
 		MenuFunc();
 		direct1 = GetDirect();
 		if (direct1 == 1)
 		{
-			RunMenuUserManage(SignInUserID, list);
+			RunMenuUserManage(SignInUserID, List);
 			system("pause");
 			system("cls");
 		}
 		if (direct1 == 2)
 		{
-			RunMenuReader(SignInUserID, list);
+			RunMenuReader(SignInUserID, List,l);
 			system("pause");
 			system("cls");
 		}
 		if (direct1 == 3)
 		{
-			RunMenuBookManage(SignInUserID, list);
+			RunMenuBookManage(SignInUserID, List,b);
 			system("pause");
 			system("cls");
 		}
 		if (direct1 == 4)
 		{
 			cout << "4. Lap phieu muon sach" << endl;
-
-
+			CreateBorrowForm(bf, l);
 			system("pause");
 			system("cls");
 		}
@@ -391,10 +393,10 @@ void MenuReader()
 	cout << "   ************************************" << endl;
 	cout << endl << "Chon chuc nang: ";
 }
-void RunMenuReader(string SignInUserID, UserList userlist)
+void RunMenuReader(string SignInUserID, UserList userlist, list <Reader> &l)
 {
 	int direct1;
-	list <Reader> l;
+	//list <Reader> l;
 
 	UpdateReaderList(l);
 	do
@@ -468,10 +470,10 @@ void MenuBookManage()
 	cout << endl << "Chon chuc nang: ";
 }
 
-void RunMenuBookManage(string SignInUserID, UserList userlist)
+void RunMenuBookManage(string SignInUserID, UserList userlist,list <Book> &b)
 {
 	int direct1;
-	list <Book> b;
+	//list <Book> b;
 	UpdateBookList(b);
 	do
 	{

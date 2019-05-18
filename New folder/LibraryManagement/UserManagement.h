@@ -4,6 +4,7 @@
 #include <fstream>
 using namespace std;
 #include "PublicFunc.h"
+#include "BookManage.h"
 #include <string>
 #include <conio.h>
 #include <stdio.h>
@@ -48,7 +49,7 @@ void RunMenuSignIn(UserList &list); // hàm chạy menu đăng nhập
 bool SignIn(string ID, string Pass, UserList list, NodeUser *temp); // hàm kt đăng nhập
 bool CheckCreateAccount(UserList list, string registeruser, NodeUser *temp); // hàm kt tài khoản đã tồn tại chưa
 void ChangePassword(UserList &list, string signinuser); // hàm thay đổi password
-void RunMenuFunc(string SignInUserID, UserList &list); // hàm chạy menu tính năng
+ // hàm chạy menu tính năng
 void RunMenuUserManage(string SignInUserID, UserList &list); // hàm chạy menu quản lý người dùng
 bool CheckSame(string username, string password); // hàm kiểm tra ID và mật khẩu có trùng không
 bool CheckIDCard(string ID); // Hàm kiểm tra CMND 
