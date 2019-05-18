@@ -5,7 +5,12 @@
 #include "PublicFunc.h"
 #include <ctime>
 
-
+struct Time
+{
+	int Hrs;
+	int Mins;
+	int Secs;
+};
 struct BorrowForm
 {
 	Reader Person;
