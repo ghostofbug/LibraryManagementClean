@@ -244,9 +244,13 @@ void MenuFunc()
 void RunMenuFunc(string SignInUserID, UserList &List)
 {
 	list <BorrowForm> bf;
+	list <Bill>BILL;
+	BorrowFormToList(bf);
+	BillToList(BILL);
 	int direct1;
 	do
 	{
+		
 		MenuFunc();
 		direct1 = GetDirect();
 		if (direct1 == 1)
@@ -277,8 +281,7 @@ void RunMenuFunc(string SignInUserID, UserList &List)
 		if (direct1 == 5)
 		{
 			cout << "5. Lap phieu tra sach" << endl;
-
-
+			ReturnBook(bf,BILL);
 			system("pause");
 			system("cls");
 		}

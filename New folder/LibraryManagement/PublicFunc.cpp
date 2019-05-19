@@ -1,4 +1,14 @@
 #include "PublicFunc.h"
+int CountNumber(int n)
+{
+	int count = 1;
+	while (n >= 10)
+	{
+		n = n / 10;
+		count++;
+	}
+	return count;
+}
 string EncryptPassWord(string pass)
 {
 	char key[14] = { 'A','B','C','D','E','F','G','J','Y','X','Z','W','I','S' };
@@ -280,4 +290,28 @@ void DisplayTime(Time time)
 			cout << time.Secs << "  ";
 		}
 	}
+}
+string printRandomNumber()
+{
+	char num[10] = { '1','2','3','4','5','6','7','8','9','0' };
+	string text = "";
+	for (int i = 0; i < 5; i++)
+	{
+		text = text + num[rand() % 10];
+	}
+	return text;
+}
+string printRandomString()
+{
+	char alphabet[26] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G',
+						  'H', 'I', 'J', 'K', 'L', 'M', 'N',
+						  'O', 'P', 'Q', 'R', 'S', 'T', 'U',
+						  'V', 'W', 'X', 'Y', 'Z' };
+
+	string text = "";
+	for (int i = 0; i < 5; i++)
+	{
+		text = text + alphabet[rand() % 26];
+	}
+	return text;
 }

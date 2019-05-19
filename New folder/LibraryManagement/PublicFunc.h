@@ -40,5 +40,8 @@ int wherey(); // hàm lấy tọa độ y trên màn console nguồn http://www.
 int wherex();// hàm lấy tọa độ x trên màn console http://www.cplusplus.com/
 void LoadingDot();
 string EncryptPassWord(string pass);
+int CountNumber(int n);
+string printRandomString();
+string printRandomNumber();
 #endif
 
