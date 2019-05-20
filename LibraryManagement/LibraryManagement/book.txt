@@ -1,0 +1,2 @@
+123456789,Hello,Ai,Tuoi Tre,1,1,2000,Trinh tham,45000,20,6
+987654321,Goodbye,Ano,Thanh Nien,1,1,2019,But ky,45000,10,3
