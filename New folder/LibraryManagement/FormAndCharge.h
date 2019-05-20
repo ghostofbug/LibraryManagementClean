@@ -48,5 +48,6 @@ void LostBook(list<BorrowForm>&bf, list<Bill>BILL);
 bool CheckNumBer(int num, string ISBN, string ID);
 void UpDateQuanTiTy(string ISBN, int n);
 int GetQuanTiTy(string ISBN);
+bool check(string FormID, list<BorrowForm> bf);
 #endif
 

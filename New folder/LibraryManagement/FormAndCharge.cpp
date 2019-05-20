@@ -1,4 +1,20 @@
 #include "FormAndCharge.h"
+bool check(string FormID,list<BorrowForm> bf)
+{
+	list<BorrowForm>::iterator i;
+	for (i = bf.begin(); i != bf.end(); i++)
+	{
+		if (FormID.compare(i->FormID)==0)
+		for (int j = 0; j < i->BookBorrowed; j++)
+		{
+			if (i->Bookname[j].Borrowed != 0)
+			{
+				return false;
+			}
+		}
+	}
+	return true;
+}
 int GetQuanTiTy(string ISBN)
 {
 	int quantity;
@@ -112,6 +128,9 @@ void LostBook(list<BorrowForm>&bf,list<Bill>BILL)
 	string ISBN;
 	string FormID;
 	Bill bill;
+	list<Book>b;
+	list<Book>::iterator k;
+	UpdateBookList(b);
 	cout << "Nhap ma phieu muon       : ";
 	cin.ignore();
 	getline(cin, FormID);
@@ -195,12 +214,22 @@ void LostBook(list<BorrowForm>&bf,list<Bill>BILL)
 								i->Bookname[j].Borrowed = i->Bookname[j].Borrowed - numlost;
 								bill.BillID = printRandomNumber();
 								bill.Charge = *i;
-								bill.charge = (static_cast<unsigned long int>(numlost * 2 * i->Bookname[j].Price)) + (static_cast<unsigned long int>(numlost * 2 * i->Bookname[j].Price))*0.1;
+								bill.charge = (static_cast<unsigned long int>(numlost * 2 * i->Bookname[j].Price)) + (static_cast<unsigned long int>(numlost * 2 * i->Bookname[j].Price*0.1));
 								bill.reason = "Mat " + num + "cuon " + i->Bookname[j].Name;
 							}
 						}
 					}
 				}
+				for (k = b.begin(); k != b.end(); k++)
+				{
+					if (ISBN.compare(k->ISBN) == 0)
+					{
+						k->Quantity = k->Quantity - numlost;
+						k->Borrowed = k->Borrowed - numlost;
+					}
+				}
+				UpdateBookFile(b);
+				cout << endl;
 				LoadingDot("Dang tai hoa don");
 				ChargeBill(bill);
 				BorrowFormToFile(bf);
@@ -360,7 +389,9 @@ void ReturnBook(list<BorrowForm>&bf,list<Bill>BILL)
 	getline(cin, ID);
 	list<BorrowForm>::iterator i;
 	i = bf.begin();
-	
+	list<Book>rd;
+	list<Book>::iterator j;
+	UpdateBookList(rd);
 	//for (i = bf.begin(); i != bf.end(); i++)
 	while (i!=bf.end())
 	{
@@ -396,8 +427,8 @@ void ReturnBook(list<BorrowForm>&bf,list<Bill>BILL)
 			ExpectReturn.tm_sec = temp.ExpectTime.Secs;
 			time_t take = mktime(&ExpectReturn);
 			localtime_s(&ExpectReturn, &take);
-			int tong = (get - take)/86400;
-			if (tong >= 1)
+			int tong = static_cast<int>((get - take) / 86400);
+			if (tong >= 1 && check(ID, bf)==false)
 			{
 				int fee = FeeCharge(tong);
 				cout << "Phieu da tre " << tong << endl;
@@ -408,17 +439,40 @@ void ReturnBook(list<BorrowForm>&bf,list<Bill>BILL)
 				bill.BillID = printRandomNumber();
 				bill.charge =static_cast<unsigned long int>(fee + fee * 0.1);
 				bill.reason = "Tre han tra sach";
+				for (j = rd.begin(); j != rd.end(); j++)
+				{
+					for (int k = 0; k < i->BookBorrowed; k++)
+					{
+						if (i->Bookname[k].ISBN.compare(j->ISBN) == 0)
+						{
+							j->Borrowed = j->Borrowed - i->Bookname[k].Borrowed;
+						}
+					}
+				}
 				LoadingDot("Dang tien hanh tao bien lai phat, xin hay doi trong giay lat");
 				ChargeBill(bill);
 				i = bf.erase(i);
+				UpdateBookFile(rd);
 				BorrowFormToFile(bf);
 				BILL.push_back(bill);
 				BillToFile(BILL);
+				
 			}
 			else
 			{
+				for (j = rd.begin(); j != rd.end(); j++)
+				{
+					for (int k = 0; k < i->BookBorrowed; k++)
+					{
+						if (i->Bookname[k].ISBN.compare(j->ISBN) == 0)
+						{
+							j->Borrowed = j->Borrowed - i->Bookname[k].Borrowed;
+						}
+					}
+				}
 				cout << "Phieu tra thanh cong" << endl;
 				i = bf.erase(i);
+				UpdateBookFile(rd);
 				BorrowFormToFile(bf);
 			}
 		}
