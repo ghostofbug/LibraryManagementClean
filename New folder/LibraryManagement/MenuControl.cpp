@@ -237,6 +237,7 @@ void MenuFunc()
 	cout << "   | 4. Lap phieu muon sach           |" << endl;
 	cout << "   | 5. Lap phieu tra sach            |" << endl;
 	cout << "   | 6. Thong ke                      |" << endl;
+	cout << "   | 7. Bao mat sach                  |" << endl;
 	cout << "   | 0. Dang xuat                     |" << endl;
 	cout << "   ************************************" << endl;
 	cout << endl << "Chon chuc nang: ";
@@ -290,6 +291,12 @@ void RunMenuFunc(string SignInUserID, UserList &List)
 			cout << "6. Thong ke" << endl;
 			RunMenuStatistic();
 
+			system("pause");
+			system("cls");
+		}
+		if (direct1 == 7)
+		{
+			LostBook(bf,BILL);
 			system("pause");
 			system("cls");
 		}

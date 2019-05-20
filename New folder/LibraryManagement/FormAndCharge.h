@@ -10,7 +10,7 @@ struct BorrowForm
 {
 	string FormID;
 	Reader Person;
-	Book Bookname[50];
+	Book Bookname[5];
 	Date Borrowday;
 	Date Expectreturnday;
 	Time TimeCreate;
@@ -21,9 +21,10 @@ struct Bill
 {
 	string BillID;
 	BorrowForm Charge;
-	double charge;
+	unsigned long int charge;
 	string reason;
 };
+bool CheckIDForm(string ID);
 void BorrowFormToList(list<BorrowForm>&bf);
 string FindName(string ISBN, list<Book>b);
 void CreateBorrowForm(list <BorrowForm> &bf);
@@ -38,9 +39,14 @@ bool CheckID(string ID, list<BorrowForm>bf);
 void ReturnBook(list<BorrowForm>&bf, list<Bill>BILL);
 bool CheckSameISBN(BorrowForm temp, string ISBN);
 void BillToFile(list<Bill>BILL);
-int FeeCharge(int elapseday);
+unsigned long int FeeCharge(int elapseday);
 void BillToList(list<Bill>&BILL);
 bool CheckSameIDreader(string getIDreader);
 void ChargeBill(Bill bill);
+bool CheckISBNInBorrowForm(string ISBN, string ID);
+void LostBook(list<BorrowForm>&bf, list<Bill>BILL);
+bool CheckNumBer(int num, string ISBN, string ID);
+void UpDateQuanTiTy(string ISBN, int n);
+int GetQuanTiTy(string ISBN);
 #endif
 

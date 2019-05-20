@@ -1,17 +1,238 @@
 #include "FormAndCharge.h"
+int GetQuanTiTy(string ISBN)
+{
+	int quantity;
+	list<Book>rd;
+	UpdateBookList(rd);
+	list<Book>::iterator i;
+	for (i = rd.begin(); i != rd.end(); i++)
+	{
+		if (ISBN.compare(i->ISBN) == 0)
+		{
+			quantity = i->Quantity - i->Borrowed;
+		}
+	}
+	return quantity;
+}
+void UpDateQuanTiTy(string ISBN,int n)
+{
+	list<Book> rd;
+	UpdateBookList(rd);
+	list<Book>::iterator i;
+	list<Book>::iterator j;
+	for (i = rd.begin(); i != rd.end(); i++)
+	{
+		if (ISBN.compare(i->ISBN) == 0)
+		{
+			i->Borrowed = i->Borrowed + n;
+		}
+	}
+	UpdateBookFile(rd);
+	i = rd.begin();
+	j = rd.end();
+	rd.erase(i, j);
+}
+bool CheckNumBer(int num,string ISBN,string ID)
+{
+	
+	list<BorrowForm>temp;
+	list<BorrowForm>::iterator i;
+	BorrowFormToList(temp);
+	for (i = temp.begin(); i != temp.end(); i++)
+	{
+		if (ID.compare(i->FormID)==0)
+		{
+			for (int j = 0; j < i->BookBorrowed; j++)
+			{
+				if (ISBN.compare(i->Bookname[j].ISBN) == 0 && num <= i->Bookname[j].Borrowed && num!=0)
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+bool CheckIDForm(string ID)
+{
+	
+	list<BorrowForm>temp;
+	BorrowFormToList(temp);
+	list<BorrowForm>::iterator i;
+	list<BorrowForm>::iterator j = temp.begin();
+	list<BorrowForm>::iterator k = temp.end();
+	for (i = temp.begin(); i != temp.end(); i++)
+	{
+		if (ID.compare(i->FormID) == 0)
+		{
+			temp.erase(j, k);
+			return true;
+		}
+	}
+	temp.erase(j, k);
+	return false;
+}
+bool CheckISBNInBorrowForm(string ISBN,string ID)
+{
+	bool check = false;
+	list<BorrowForm>temp;
+	BorrowFormToList(temp);
+	list<BorrowForm>::iterator i;
+	list<BorrowForm>::iterator j = temp.begin();
+	list<BorrowForm>::iterator k = temp.end();
+	for (i = temp.begin(); i != temp.end(); i++)
+	{
+		if (ID.compare(i->FormID) == 0)
+		{
+			for (int j = 0; j < i->BookBorrowed; j++)
+			{
+				if (ISBN.compare(i->Bookname[j].ISBN) == 0)
+				{
+					check = true;
+				}
+			}
+		}
+		if (check == true)
+		{
+			temp.erase(j, k);
+			return true;
+		}
+	}
+	temp.erase(j, k);
+	return false;
+}
+void LostBook(list<BorrowForm>&bf,list<Bill>BILL)
+{
+	system("cls");
+	cout << "   ---------------------------------" << endl;
+	cout << "   |          BAO MAT SACH         |" << endl;
+	cout << "   ---------------------------------" << endl;
+	int numlost = 0;
+	string num;
+	string ISBN;
+	string FormID;
+	Bill bill;
+	cout << "Nhap ma phieu muon       : ";
+	cin.ignore();
+	getline(cin, FormID);
+	if (CheckIDForm(FormID) == false)
+	{
+		cout << "Ma phieu khong ton tai" << endl;
+	}
+	else
+	{
+		cout << "Nhap ISBN sach mat       : ";
+		getline(cin, ISBN);
+		if (CheckISBNInBorrowForm(ISBN,FormID) == false)
+		{
+			cout << "Sach khong ton tai trong phieu" << endl;
+		}
+		else
+		{
+			for (;;)
+			{
+				cout << "Nhap so luong sach mat   :  ";
+				string text2 = "Nhap so luong sach mat   :  ";
+				int y = wherey();
+				//do
+				//{
+					getline(cin, num);
+					int x = static_cast<int>(text2.size());
+					y = static_cast<int>(y);
+					//gotoxy(x, y);
+				//} while ((num.compare("1") != 0 && num.compare("2") != 0 && num.compare("3") != 0));
+				if (num.compare("1") == 0)
+				{
+					numlost = 1;
+				}
+				if (num.compare("2") == 0)
+				{
+					numlost = 2;
+				}
+				if (num.compare("3") == 0)
+				{
+					numlost = 3;
+				}
+				else if (num.compare("1") != 0 && num.compare("2") != 0 && num.compare("3") != 0)
+				{
+					numlost = 10;
+				}
+				if (CheckNumBer(numlost, ISBN, FormID) == false)
+				{
+					gotoxy(0, y);
+					for (int i = 0; i < text2.size() + num.size(); i++)
+					{
+						cout << " ";
+					}
+					gotoxy(0, y);
+					cout << "Nhap sai so luong sach duoc muon cua dau sach ";
+					_getch();
+					gotoxy(0, y);
+					for (int i = 0; i < StringSize("Nhap sai so luong sach duoc muon cua dau sach "); i++)
+					{
+						cout << " ";
+					}
+					gotoxy(0, y);
+				}
+				else if (CheckNumBer(numlost, ISBN, FormID) == true)
+				{
+					break;
+				}
+			}
+			cout << "nhap Y de xac nhan: ";
+			int keypressed = _getch();
+			if (keypressed == (int)'y' || keypressed == (int)'Y')
+			{
+				list<BorrowForm>::iterator i;
+				for (i = bf.begin(); i != bf.end(); i++)
+				{
+					if (FormID.compare(i->FormID) == 0)
+					{
+						for (int j = 0; j < i->BookBorrowed; j++)
+						{
+							if (ISBN.compare(i->Bookname[j].ISBN) == 0)
+							{
+								i->Bookname[j].Borrowed = i->Bookname[j].Borrowed - numlost;
+								bill.BillID = printRandomNumber();
+								bill.Charge = *i;
+								bill.charge = (static_cast<unsigned long int>(numlost * 2 * i->Bookname[j].Price)) + (static_cast<unsigned long int>(numlost * 2 * i->Bookname[j].Price))*0.1;
+								bill.reason = "Mat " + num + "cuon " + i->Bookname[j].Name;
+							}
+						}
+					}
+				}
+				LoadingDot("Dang tai hoa don");
+				ChargeBill(bill);
+				BorrowFormToFile(bf);
+				BILL.push_back(bill);
+				BillToFile(BILL);
+			}
+			else
+			{
+				cout << "Thao tac bi huy" << endl;
+			}
+		}
+	}
+
+	
+}
 bool CheckSameIDreader(string getIDreader)
 {
 	list<BorrowForm>bf;
 	BorrowFormToList(bf);
 	list<BorrowForm>::iterator i;
+	list<BorrowForm>::iterator j = bf.begin();
+	list<BorrowForm>::iterator k = bf.end();
 	for (i = bf.begin(); i != bf.end(); i++)
 	{
 		BorrowForm temp = *i;
 		if (getIDreader.compare(temp.Person.ID) == 0)
 		{
+			bf.erase(j, k);
 			return false;
 		}
 	}
+	bf.erase(j, k);
 	return true;
 }
 bool CheckSameISBN(BorrowForm temp,string ISBN)
@@ -74,6 +295,7 @@ void BillToList(list<Bill>&BILL)
 }
 void ChargeBill(Bill bill)
 {
+	system("cls");
 	cout << "   ---------------------------------" << endl;
 	cout << "   |         HOA DON PHAT          |" << endl;
 	cout << "   ---------------------------------" << endl;
@@ -87,10 +309,11 @@ void ChargeBill(Bill bill)
 	cout << " | " << setw(19) << (bill.charge * 100) / 110;
 	cout << " | " <<setw(20)<< bill.charge;
 	cout << " | " << endl;
+	_getch();
 }
-int FeeCharge(int elapseday)
+unsigned long int FeeCharge(int elapseday)
 {
-	int fee = 5000;
+	unsigned long int fee = 5000;
 	fee = fee * elapseday;
 	return fee;
 }
@@ -181,11 +404,11 @@ void ReturnBook(list<BorrowForm>&bf,list<Bill>BILL)
 				cout << "so tien phai dong phat: ";
 				cout << fee << endl;
 				cout << CountNumber(fee) << endl;
-				
 				bill.Charge = temp;
 				bill.BillID = printRandomNumber();
-				bill.charge =static_cast<double>(fee + fee * 0.1);
+				bill.charge =static_cast<unsigned long int>(fee + fee * 0.1);
 				bill.reason = "Tre han tra sach";
+				LoadingDot("Dang tien hanh tao bien lai phat, xin hay doi trong giay lat");
 				ChargeBill(bill);
 				i = bf.erase(i);
 				BorrowFormToFile(bf);
@@ -194,6 +417,7 @@ void ReturnBook(list<BorrowForm>&bf,list<Bill>BILL)
 			}
 			else
 			{
+				cout << "Phieu tra thanh cong" << endl;
 				i = bf.erase(i);
 				BorrowFormToFile(bf);
 			}
@@ -505,9 +729,9 @@ void CreateBorrowForm(list <BorrowForm> &bf)
 			string text1 = "nhan bat ky de chon sach,nhan Y de hoan tat  :";
 			int cor = wherey();
 			getline(cin, validate);
-			if (n > 50)
+			if (n >5)
 			{
-				cout << "Vuot qua so sach co the muon" << endl;
+				cout << "Vuot qua so dau sach co the muon" << endl;
 				break;
 			}
 			if (validate.compare("Y") == 0 || validate.compare("y") == 0)
@@ -527,11 +751,11 @@ void CreateBorrowForm(list <BorrowForm> &bf)
 				gotoxy(static_cast<int>(text.size() + 3),static_cast<int>( wherey() - 1));
 				cout << setw(11) << left << temp << " ";
 				cout << setw(15) << "Nhap sach thanh cong" << endl;
-				Borrowbook.Bookname[n].ISBN = temp;
+				
 				string name = FindName(temp, b);
 				cout << "ten sach                 : " << name << endl;
 				cout << "Nhap so luong sach muon (toi da 3 cuon)  : ";
-				string text2= "Nhap so luong sach muon (toi da 3 cuon)  : ";
+				string text2 = "Nhap so luong sach muon (toi da 3 cuon)  : ";
 				int y = wherey();
 				string temp1;
 				do
@@ -541,7 +765,7 @@ void CreateBorrowForm(list <BorrowForm> &bf)
 					int x = static_cast<int>(text2.size());
 					y = static_cast<int>(y);
 					gotoxy(x, y);
-				} while (temp1.compare("1")!=0 && temp1.compare("2")!=0 && temp1.compare("3")!=0);
+				} while (temp1.compare("1") != 0 && temp1.compare("2") != 0 && temp1.compare("3") != 0);
 				if (temp1.compare("1") == 0)
 				{
 					Borrowbook.Bookname[n].Borrowed = 1;
@@ -554,15 +778,24 @@ void CreateBorrowForm(list <BorrowForm> &bf)
 				{
 					Borrowbook.Bookname[n].Borrowed = 3;
 				}
-				cout << endl;
-				//cin.ignore();
-				count++;
-				n++;
-				i++;
+				if (Borrowbook.Bookname[n].Borrowed <= GetQuanTiTy(temp))
+				{
+					UpDateQuanTiTy(temp, Borrowbook.Bookname[n].Borrowed);
+					Borrowbook.Bookname[n].ISBN = temp;
+					cout << endl;
+					//cin.ignore();
+					count++;
+					n++;
+					i++;
+				}
+				else
+				{
+					cout << endl;
+					cout << "nhap du sach voi kho" << endl;
+				}
 			}
 			else
 			{
-				i++;
 				gotoxy(static_cast<int>(text.size() + 3),static_cast<int>( wherey() - 1));
 				cout << setw(11) << left << temp << " ";
 				cout << setw(15) << "Ma sach khong ton tai hoac da duoc nhap" << endl;
@@ -586,7 +819,7 @@ void CreateBorrowForm(list <BorrowForm> &bf)
 			{
 				Borrowbook.FormID = printRandomString();
 			} while (CheckSameID(Borrowbook.FormID) == false);
-			LoadingDot();
+			LoadingDot("Dang tai du lieu, xin hay doi trong giay lat");
 			PrintForm(Borrowbook);
 			cout << "bam Y de xac nhan lap phieu muon sach,bam cac ky tu khac de huy bo: ";
 			int keypressed = _getch();
@@ -597,7 +830,8 @@ void CreateBorrowForm(list <BorrowForm> &bf)
 			}
 			else
 			{
-
+				cout << endl;
+				cout << "Phieu da bi huy" << endl;
 			}
 		}
 	}

@@ -75,10 +75,9 @@ void DisplayAfterError(int x, int y,string &text,bool Check)
 		cout << text;
 	}
 }
-void LoadingDot()
+void LoadingDot(string text)
 {
-	cout << "Dang tai du lieu, xin doi trong giay lat ";
-	
+	cout << text;
 	for (int i = 0; i <3; i++)
 	{
 		for (int j = 0; j < 3; j++)
@@ -87,12 +86,12 @@ void LoadingDot()
 			cout.flush();
 			std::this_thread::sleep_for(std::chrono::seconds(1));
 		}
-		gotoxy(StringSize("Dang tai du lieu, xin doi trong giay lat"), wherey());
+		gotoxy(StringSize(text), wherey());
 		for (int k = 0;k < 6; k++)
 		{
 			cout << " ";
 		}
-		gotoxy(StringSize("Dang tai du lieu, xin doi trong giay lat "),wherey());
+		gotoxy(StringSize(text),wherey());
 		
 	}
 }
@@ -295,7 +294,7 @@ string printRandomNumber()
 {
 	char num[10] = { '1','2','3','4','5','6','7','8','9','0' };
 	string text = "";
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		text = text + num[rand() % 10];
 	}
