@@ -1,4 +1,29 @@
 #include "FormAndCharge.h"
+bool CheckExpDay(string IDreader)
+{
+	time_t check;
+	time_t now;
+	time(&now);
+	tm timecheck;
+	list<Reader>rd;
+	UpdateReaderList(rd);
+	list<Reader>::iterator i;
+	for (i = rd.begin(); i != rd.end(); i++)
+	{
+		if (IDreader.compare(i->ID) == 0)
+		{
+			timecheck.tm_mday = i->Exp.d;
+			timecheck.tm_mon = i->Exp.m - 1;
+			timecheck.tm_year = i->Exp.y - 1900;
+			check = mktime(&timecheck);
+			if (check >= now)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
 bool check(string FormID, list<BorrowForm> bf)
 {
 	list<BorrowForm>::iterator i;
@@ -688,9 +713,13 @@ void CreateBorrowForm(list <BorrowForm> &bf)
 	{
 		cout << "Ma doc gia khong ton tai, vui long tao the de muon sach" << endl;
 	}
-	else if (CheckSameIDreader(getIDreader) == false)
+	if (CheckSameIDreader(getIDreader) == false)
 	{
 		cout << "Doc gia da muon sach " << endl;
+	}
+	if (CheckExpDay(getIDreader) == true)
+	{
+		cout << "The doc gia da het han" << endl;
 	}
 	else
 	{

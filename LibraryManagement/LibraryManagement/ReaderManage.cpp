@@ -74,6 +74,7 @@ void UpdateReaderList(list <Reader> &l)
 		getline(fin, temp.Info.CitizenId, ',');
 		getline(fin, temp.Info.Email, ',');
 		getline(fin, temp.Info.Address, ',');
+		temp.Info.Address = EncryptPassWord(temp.Info.Address);
 		fin >> temp.Mfg.d;
 		fin.seekg(1, 1);
 		fin >> temp.Mfg.m;
@@ -106,7 +107,7 @@ void AddReaderToFile(Reader reader)
 	fout.open("readernew.txt", ios::app);
 	fout << reader.ID << "," << reader.Info.Name << ",";
 	fout << reader.Info.Birthday.d << "," << reader.Info.Birthday.m << "," << reader.Info.Birthday.y << ",";
-	fout << reader.Info.Sex << "," << reader.Info.CitizenId << "," << reader.Info.Email << "," << reader.Info.Address << ",";
+	fout << reader.Info.Sex << "," << reader.Info.CitizenId << "," << reader.Info.Email << "," << EncryptPassWord(reader.Info.Address) << ",";
 	fout << reader.Mfg.d << "," << reader.Mfg.m << "," << reader.Mfg.y << ",";
 	fout << reader.Exp.d << "," << reader.Exp.m << "," << reader.Exp.y << endl;
 	fout.close();
@@ -171,8 +172,8 @@ void CreateReader(list <Reader> &l)
 		cout << "Email                    : ";
 		getline(cin, temp.Info.Email);
 		cout << "Ngay lap the (dd/mm/yyyy): ";
-		y = wherey();
-		temp.Mfg = GetDay(StringSize("Ngay lap the (dd/mm/yyyy): "), y);
+		temp.Mfg = MfgGenerate();
+		DisplayDay(temp.Mfg);
 		temp.Exp = PlusDay(temp.Mfg, 0, 48, 0);
 		cout << endl << "Nhan 'y' de xac nhan them doc gia, nhan bat ky de huy thao tac: ";
 		int check = _getch();

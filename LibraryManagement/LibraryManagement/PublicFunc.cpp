@@ -1,4 +1,16 @@
 #include "PublicFunc.h"
+Date MfgGenerate()
+{
+	Date Mfg;
+	tm mfg;
+	time_t now;
+	time(&now);
+	localtime_s(&mfg, &now);
+	Mfg.d = mfg.tm_mday;
+	Mfg.m = mfg.tm_mon + 1;
+	Mfg.y = mfg.tm_year + 1900;
+	return Mfg;
+}
 int CountNumber(int n)
 {
 	int count = 1;

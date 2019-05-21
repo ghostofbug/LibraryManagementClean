@@ -50,5 +50,6 @@ void LostBook(list<BorrowForm>&bf, list<Bill>BILL);
 int CheckNumBer(int num, string ISBN, BorrowForm form);
 void UpDateQuanTiTy(string ISBN, int n);
 int GetQuanTiTy(string ISBN);
+bool CheckExpDay(string IDreader);
 #endif
 

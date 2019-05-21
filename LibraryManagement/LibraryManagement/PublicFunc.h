@@ -44,5 +44,6 @@ int CountNumber(int n);
 string printRandomString();
 string printRandomNumber();
 void Pause();
+Date MfgGenerate();
 #endif
 
