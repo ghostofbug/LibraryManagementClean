@@ -574,7 +574,7 @@ void RunMenuStatistic(string SignInUserID, UserList userlist)
 		}
 		if (direct1 == 6)
 		{
-			cout << "6. Thong ke danh sach doc gia tre han" << endl;
+			CountReaderByBorrow();
 		}
 		Pause();
 	} while (direct1 != 0);

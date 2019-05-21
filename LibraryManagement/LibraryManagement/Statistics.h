@@ -6,6 +6,7 @@
 #include "PublicFunc.h"
 #include "BookManage.h"
 #include "ReaderManage.h"
+#include "FormAndCharge.h"
 
 using namespace std;
 
@@ -18,3 +19,4 @@ bool CheckCategory(list <string> catlist, string category);
 void CountEachCategory(list <Book> l, list <string> &CatList);
 void CountReaderByGender();
 void CountBookBorrowed();
+void CountReaderByBorrow();

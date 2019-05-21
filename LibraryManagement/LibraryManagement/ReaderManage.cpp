@@ -194,6 +194,7 @@ void AddReaderToList(list<Reader> &l, Reader reader)
 
 void UpdateReaderInfo(list <Reader> &l, string id)
 {
+	int check = 0;
 	list<Reader> ::iterator i;
 	for (i = l.begin(); i != l.end(); i++)
 	{
@@ -202,10 +203,13 @@ void UpdateReaderInfo(list <Reader> &l, string id)
 			DisplayReaderInfo(*i);
 			*i = ChangReaderInfo(*i);
 			UpdateReaderFile(l);
+			check = 1;
 			break;
 		}
 	}
-	cout << "Doc gia khong ton tai!" << endl;
+	if (check == 0) {
+		cout << "Doc gia khong ton tai!" << endl;
+	}
 }
 Reader ChangReaderInfo(Reader reader)
 {

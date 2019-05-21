@@ -149,7 +149,7 @@ void CreateBook(list <Book> &l)
 		temp.Borrowed = 0;
 		cout << endl << "Nhan 'y' de xac nhan them sach, nhan bat ky de huy thao tac: ";
 		int check = _getch();
-		if (check == (int) 'y')
+		if (check == 'y' || check == 'Y')
 		{
 			AddBookToList(l, temp);
 			cout << endl << "Them sach thanh cong!" << endl;
@@ -166,6 +166,7 @@ void AddBookToList(list<Book> &l, Book book)
 }
 void UpdateBookInfo(list <Book> &l, string ISBN)
 {
+	int check = 0;
 	list<Book> ::iterator i;
 	for (i = l.begin(); i != l.end(); i++)
 	{
@@ -174,24 +175,27 @@ void UpdateBookInfo(list <Book> &l, string ISBN)
 			DisplayBookInfo(*i);
 			*i = ChangBookInfo(*i);
 			UpdateBookFile(l);
+			check = 1;
 			break;
 		}
 	}
-	cout << "Sach khong ton tai!" << endl;
+	if (check == 0) {
+		cout << "Sach khong ton tai!" << endl;
+	}
 }
 Book ChangBookInfo(Book book)
 {
 
 	cout << "Nhan 'y' de cap nhat thong tin, nhan bat ky de bo qua: ";
 	int check = _getch();
-	if (check == (int)'y')
+	if (check == 'y' || check == 'Y')
 	{
 		Book temp = book;
 		cout << endl;
 		cout << "Ten sach                 - " << temp.Name << endl;
 		int check;
 		check = _getch();
-		if (check == (int)'y')
+		if (check == 'y' || check == 'Y')
 		{
 			cout << "Cap nhat ten sach       : ";
 			getline(cin, temp.Name);
@@ -199,21 +203,21 @@ Book ChangBookInfo(Book book)
 
 		cout << "Tac gia                  - " << temp.Author << endl;
 		check = _getch();
-		if (check == (int)'y')
+		if (check == 'y' || check == 'Y')
 		{
 			cout << "Cap nhat tac gia        : ";
 			getline(cin, temp.Author);
 		}
 		cout << "Nha xuat ban             - " << temp.Publisher << endl;
 		check = _getch();
-		if (check == (int)'y')
+		if (check == 'y' || check == 'Y')
 		{
 			cout << "Cap nhat nha xuat ban   : ";
 			getline(cin, temp.Publisher);
 		}
 		cout << "Ngay xuat ban            - "; DisplayDay(temp.Mfg); cout << endl;
 		check = _getch();
-		if (check == (int)'y')
+		if (check == 'y' || check == 'Y')
 		{
 			cout << "Cap nhat ngay xuat ban  : ";
 			int y = wherey();
@@ -221,35 +225,35 @@ Book ChangBookInfo(Book book)
 		}
 		cout << "The loai                 - " << temp.Category << endl;
 		check = _getch();
-		if (check == (int)'y')
+		if (check == 'y' || check == 'Y')
 		{
 			cout << "Cap nhat the loai       : ";
 			getline(cin, temp.Category);
 		}
 		cout << "Gia                      - " << temp.Price << endl;
 		check = _getch();
-		if (check == (int)'y')
+		if (check == 'y' || check == 'Y')
 		{
 			cout << "Cap nhat gia            : ";
 			cin >> temp.Price;
 		}
 		cout << "So luong sach            - " << temp.Quantity << endl;
 		check = _getch();
-		if (check == (int)'y')
+		if (check == 'y' || check == 'Y')
 		{
 			cout << "Cap nhat so luong sach   : ";
 			cin >> temp.Quantity;
 		}
 		cout << "Dang muon                - " << temp.Borrowed << endl;
 		check = _getch();
-		if (check == (int)'y')
+		if (check == 'y' || check == 'Y')
 		{
 			cout << "Cap nhat so luong muon   : ";
 			cin >> temp.Borrowed;
 		}
 		cout << "Nhan 'y' de xac nhan thay doi, nhan bat ky de huy thao tac: ";
 		check = _getch();
-		if (check == (int) 'y')
+		if (check == 'y' || check == 'Y')
 		{
 			cout << "Thong tin da cap nhat!" << endl;
 			return temp;
@@ -289,18 +293,23 @@ void DelBook(list <Book> &l, string ISBN)
 		if (ISBN.compare(i->ISBN) == 0)
 		{
 			DisplayBookInfo(*i);
-			cout << "Nhan 'y' de xoa thong tin, nhan bat ky de huy thao tac : ";
-			int check;
-			check = _getch();
-			{
-				if (check == 'y')
+			if (i->Borrowed > 0) {
+				cout << "Sach dang duoc muon, khong the xoa!" << endl;
+			}
+			else {
+				cout << "Nhan 'y' de xoa thong tin, nhan bat ky de huy thao tac : ";
+				int check;
+				check = _getch();
 				{
-					l.erase(i);
-					UpdateBookFile(l);
-					cout << "Sach da bi xoa!" << endl;
-				}
-				else {
-					cout << "Thao tac da bi huy!" << endl;
+					if (check == 'y' || check == 'Y')
+					{
+						l.erase(i);
+						UpdateBookFile(l);
+						cout << "Sach da bi xoa!" << endl;
+					}
+					else {
+						cout << "Thao tac da bi huy!" << endl;
+					}
 				}
 			}
 			break;

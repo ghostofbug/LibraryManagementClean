@@ -1,5 +1,32 @@
 #include "FormAndCharge.h"
-
+bool check(string FormID, list<BorrowForm> bf)
+{
+	list<BorrowForm>::iterator i;
+	for (i = bf.begin(); i != bf.end(); i++)
+	{
+		if (FormID.compare(i->FormID) == 0)
+			for (int j = 0; j < i->BookBorrowed; j++)
+			{
+				if (i->Bookname[j].Borrowed != 0)
+				{
+					return false;
+				}
+			}
+	}
+	return true;
+}
+bool CheckNullForm(BorrowForm form)
+{
+	int count = 0;
+	for (int j = 0; j < form.BookBorrowed; j++) {
+		count = count + form.Bookname[j].Borrowed;
+	}
+	if (count == 0)
+	{
+		return true;
+	}
+	return false;
+}
 int GetQuanTiTy(string ISBN)
 {
 	int quantity;
@@ -99,7 +126,7 @@ void LostBook(list<BorrowForm>&bf, list<Bill>BILL)
 		cout << " |   Ma phieu   |           Ten doc gia          |      Ngay muon      |  Ngay tra du kien   |            Ten sach            |      ISBN       |  SL  |" << endl;
 		cout << " -------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
 		list <BorrowForm> ::iterator k;
-		BorrowForm temp;
+		//BorrowForm temp;
 		for (k = bf.begin(); k != bf.end(); k++)
 		{
 			if (CheckIDForm(FormID) == true)
@@ -160,7 +187,7 @@ void LostBook(list<BorrowForm>&bf, list<Bill>BILL)
 				}
 				else
 				{
-					cout << "Nhan 'Y' de xac nhan: ";
+					cout << "Nhan 'Y' de xac nhan     : ";
 					int keypressed = _getch();
 					if (keypressed == (int)'y' || keypressed == (int)'Y')
 					{
@@ -175,6 +202,19 @@ void LostBook(list<BorrowForm>&bf, list<Bill>BILL)
 						BorrowFormToFile(bf);
 						BILL.push_back(bill);
 						BillToFile(BILL);
+						list <Book> b;
+						UpdateBookList(b);
+						list <Book> ::iterator i;
+						for (i = b.begin(); i != b.end(); i++)
+						{
+							if (ISBN.compare(i->ISBN) == 0)
+							{
+								i->Quantity = i->Quantity - numlost;
+								i->Borrowed = i->Borrowed - numlost;
+								UpdateBookFile(b);
+								break;
+							}
+						}
 					}
 					else
 					{
@@ -183,6 +223,10 @@ void LostBook(list<BorrowForm>&bf, list<Bill>BILL)
 					break;
 				}
 			}
+		}
+		if (CheckNullForm(*k) == true)
+		{
+			bf.erase(k);
 		}
 	}
 }
@@ -359,7 +403,7 @@ void ReturnBook(list<BorrowForm>&bf,list<Bill>BILL)
 			time_t take = mktime(&ExpectReturn);
 			localtime_s(&ExpectReturn, &take);
 			int tong = (get - take)/86400;
-			if (tong >= 1)
+			if (tong >= 1 && check(ID, bf) == false)
 			{
 				int fee = FeeCharge(tong);
 				cout << "Phieu da tre " << tong << endl;
@@ -372,23 +416,36 @@ void ReturnBook(list<BorrowForm>&bf,list<Bill>BILL)
 				bill.reason = "Tre han tra sach";
 				LoadingDot("Dang tien hanh tao bien lai phat, xin hay doi trong giay lat");
 				ChargeBill(bill);
-				i = bf.erase(i);
-				BorrowFormToFile(bf);
 				BILL.push_back(bill);
 				BillToFile(BILL);
 			}
 			else
 			{
 				cout << "Phieu tra thanh cong" << endl;
-				i = bf.erase(i);
-				BorrowFormToFile(bf);
 			}
+			list <Book> b;
+			UpdateBookList(b);
+			list <Book> ::iterator j;
+			for (j = b.begin(); j != b.end(); j++)
+			{
+				for (int k = 0; k < i->BookBorrowed; k++)
+				{
+					if (j->ISBN.compare(i->Bookname[k].ISBN) == 0)
+					{
+						j->Borrowed = j->Borrowed - i->Bookname[k].Borrowed;
+					}
+				}
+			}
+			i = bf.erase(i);
+			UpdateBookFile(b);
+			BorrowFormToFile(bf);
 		}
 		else
 		{
 			i++;
 		}
 	}
+	Pause();
 }
 void DisplayBorrowForm(BorrowForm form)
 {

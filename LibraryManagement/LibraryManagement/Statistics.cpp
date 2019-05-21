@@ -114,3 +114,34 @@ void CountBookBorrowed()
 	cout << "-----------------------------------------" << endl;
 	cout << "So luong sach dang muon: " << count << endl;
 }
+void CountReaderByBorrow()
+{
+	list <BorrowForm> bf;
+	list <BorrowForm> ::iterator i;
+	BorrowFormToList(bf);
+	time_t now;
+	time(&now);
+	tm ExpectReturn;
+	int count = 0;
+	cout << " -------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
+	cout << " |   Ma phieu   |           Ten doc gia          |      Ngay muon      |  Ngay tra du kien   |            Ten sach            |      ISBN       |  SL  |" << endl;
+	cout << " -------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
+	for (i = bf.begin(); i != bf.end(); i++)
+	{
+		Time temptime = i->ExpectTime;
+		Date tempday = i->Expectreturnday;
+		ExpectReturn.tm_mday = i->Expectreturnday.d;
+		ExpectReturn.tm_mon = i->Expectreturnday.m - 1;
+		ExpectReturn.tm_year = i->Expectreturnday.y - 1900;
+		ExpectReturn.tm_hour = i->ExpectTime.Hrs;
+		ExpectReturn.tm_min = i->ExpectTime.Mins;
+		ExpectReturn.tm_sec = i->ExpectTime.Secs;
+		time_t temp = mktime(&ExpectReturn);
+		if (temp < now)
+		{
+			DisplayBorrowForm(*i);
+			count ++;
+		}
+	}	
+	cout << "So luong doc gia tre han: " << count << endl;
+}

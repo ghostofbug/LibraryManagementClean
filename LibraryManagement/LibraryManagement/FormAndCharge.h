@@ -24,6 +24,7 @@ struct Bill
 	unsigned long int charge;
 	string reason;
 };
+bool check(string FormID, list<BorrowForm> bf);
 bool CheckIDForm(string ID);
 void BorrowFormToList(list<BorrowForm>&bf);
 string FindName(string ISBN, list<Book>b);
