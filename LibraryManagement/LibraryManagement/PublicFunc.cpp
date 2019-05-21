@@ -1,10 +1,19 @@
 #include "PublicFunc.h"
-Date MfgGenerate()
+Date ExpGenerate(time_t now)
+{
+	Date Exp;
+	tm exp;
+	localtime_s(&exp, &now);
+	Exp.d = exp.tm_mday;
+	Exp.m = exp.tm_mon + 1;
+	Exp.y = exp.tm_year + 1900 + 2;
+	return Exp;
+
+}
+Date MfgGenerate(time_t now)
 {
 	Date Mfg;
 	tm mfg;
-	time_t now;
-	time(&now);
 	localtime_s(&mfg, &now);
 	Mfg.d = mfg.tm_mday;
 	Mfg.m = mfg.tm_mon + 1;

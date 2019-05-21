@@ -172,9 +172,15 @@ void CreateReader(list <Reader> &l)
 		cout << "Email                    : ";
 		getline(cin, temp.Info.Email);
 		cout << "Ngay lap the (dd/mm/yyyy): ";
-		temp.Mfg = MfgGenerate();
+		time_t now;
+		time(&now);
+		temp.Mfg = MfgGenerate(now);
 		DisplayDay(temp.Mfg);
-		temp.Exp = PlusDay(temp.Mfg, 0, 48, 0);
+		//temp.Exp = PlusDay(temp.Mfg, 0, 48, 0);
+		cout << endl;
+		temp.Exp = ExpGenerate(now);
+		cout << "Ngay het han (dd/mm/yyy): ";
+		DisplayDay(temp.Exp);
 		cout << endl << "Nhan 'y' de xac nhan them doc gia, nhan bat ky de huy thao tac: ";
 		int check = _getch();
 		if (check == (int) 'y')
