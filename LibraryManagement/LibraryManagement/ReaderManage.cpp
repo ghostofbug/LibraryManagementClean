@@ -176,7 +176,6 @@ void CreateReader(list <Reader> &l)
 		time(&now);
 		temp.Mfg = MfgGenerate(now);
 		DisplayDay(temp.Mfg);
-		//temp.Exp = PlusDay(temp.Mfg, 0, 48, 0);
 		cout << endl;
 		temp.Exp = ExpGenerate(now);
 		cout << "Ngay het han (dd/mm/yyy): ";
@@ -192,6 +191,26 @@ void CreateReader(list <Reader> &l)
 			cout << "Thao tac da bi huy!" << endl;
 		}
 	}
+}
+Date ExpGenerate(time_t now)
+{
+	Date Exp;
+	tm exp;
+	localtime_s(&exp, &now);
+	Exp.d = exp.tm_mday;
+	Exp.m = exp.tm_mon + 1;
+	Exp.y = exp.tm_year + 1900 + 4;
+	return Exp;
+}
+Date MfgGenerate(time_t now)
+{
+	Date Mfg;
+	tm mfg;
+	localtime_s(&mfg, &now);
+	Mfg.d = mfg.tm_mday;
+	Mfg.m = mfg.tm_mon + 1;
+	Mfg.y = mfg.tm_year + 1900;
+	return Mfg;
 }
 void AddReaderToList(list<Reader> &l, Reader reader)
 {

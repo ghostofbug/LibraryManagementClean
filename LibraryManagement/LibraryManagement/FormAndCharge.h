@@ -1,10 +1,9 @@
-#ifndef __FormAndCharge_H__
+﻿#ifndef __FormAndCharge_H__
 #define __FormAndCharge_H__
 #include "ReaderManage.h"
 #include "BookManage.h"
 #include "PublicFunc.h"
 #include <ctime>
-
 
 struct BorrowForm
 {
@@ -24,32 +23,40 @@ struct Bill
 	unsigned long int charge;
 	string reason;
 };
-bool check(string FormID, list<BorrowForm> bf);
+//TRÌNH BÀY
+void DisplayBorrowBookInfo(BorrowForm Borrowbook);
+void DisplayBorrowForm(BorrowForm form);
+void DisplayListBorrow(list<BorrowForm>bf);
+void PrintForm(BorrowForm &Borrowbook);
+//KIỂM TRA
+bool CheckNullForm(BorrowForm form);
 bool CheckIDForm(string ID);
-void BorrowFormToList(list<BorrowForm>&bf);
+bool CheckSameID(string ID);
+bool CheckID(string ID, list<BorrowForm>bf);
+bool CheckSameISBN(BorrowForm temp, string ISBN);
+bool CheckSameIDreader(string getIDreader);
+int CheckISBNInBorrowForm(string ISBN, BorrowForm form);
+int CheckNumBer(int num, string ISBN, BorrowForm form);
+bool CheckExpDay(string IDreader);
+int GetQuanTiTy(string ISBN);
+
+//MƯỢN SÁCH
 string FindName(string ISBN, list<Book>b);
 void CreateBorrowForm(list <BorrowForm> &bf);
 void FindBorrowInfo(BorrowForm &Borrowbook);
 void FindBookInfo(BorrowForm &Borrowbook, list<Book>b);
-void DisplayBorrowBookInfo(BorrowForm Borrowbook);
-void PrintForm(BorrowForm &Borrowbook);
-void BorrowFormToFile(list<BorrowForm>bf);
-void DisplayBorrowForm(BorrowForm form);
-void DisplayListBorrow(list<BorrowForm>bf);
-bool CheckSameID(string ID);
-bool CheckID(string ID, list<BorrowForm>bf);
-void ReturnBook(list<BorrowForm>&bf, list<Bill>BILL);
-bool CheckSameISBN(BorrowForm temp, string ISBN);
-void BillToFile(list<Bill>BILL);
-unsigned long int FeeCharge(int elapseday);
-void BillToList(list<Bill>&BILL);
-bool CheckSameIDreader(string getIDreader);
-void ChargeBill(Bill bill);
-int CheckISBNInBorrowForm(string ISBN, BorrowForm form);
-void LostBook(list<BorrowForm>&bf, list<Bill>BILL);
-int CheckNumBer(int num, string ISBN, BorrowForm form);
-void UpDateQuanTiTy(string ISBN, int n);
-int GetQuanTiTy(string ISBN);
-bool CheckExpDay(string IDreader);
-#endif
 
+//ĐỒNG BỘ DỮ LIỆU
+void BorrowFormToList(list<BorrowForm>&bf);
+void BorrowFormToFile(list<BorrowForm>bf);
+void BillToList(list<Bill>&BILL);
+void BillToFile(list<Bill>BILL);
+void UpDateQuanTiTy(string ISBN, int n);
+
+//TRẢ SÁCH
+void ReturnBook(list<BorrowForm>&bf, list<Bill>BILL);
+unsigned long int FeeCharge(int elapseday);
+void LostBook(list<BorrowForm>&bf, list<Bill>BILL);
+void ChargeBill(Bill bill);
+
+#endif

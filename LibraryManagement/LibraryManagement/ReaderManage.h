@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <conio.h>
 #include <string>
+#include <Windows.h>
+
 #include "PublicFunc.h"
 #include "UserManagement.h"
 
@@ -33,6 +35,8 @@ void AddReaderToFile(Reader reader);
 //Tạo độc giả mới
 bool CheckCreateReader(string ID);
 void CreateReader(list<Reader> &l);
+Date MfgGenerate(time_t now);//ngày lập thẻ lấy từ hệ thống
+Date ExpGenerate(time_t now);//ngày hết hạn
 void AddReaderToList(list<Reader> &l, Reader reader);
 
 //Cập nhật thông tin độc giả

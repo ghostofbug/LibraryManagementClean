@@ -3,8 +3,17 @@
 
 void BookCount()
 {
+	int count = 0;
+	list <Book> l;
+	UpdateBookList(l);
+	list<Book> ::iterator i;
+	for (i = l.begin(); i != l.end(); i++)
+	{
+		count += i->Quantity;
+	}
 	cout << "-----------------------------------------" << endl;
-	cout << "So luong sach: " << FileSize("book.txt") << endl;
+	cout << "So luong dau sach: " << FileSize("book.txt") << endl;
+	cout << "So luong sach    : " << count << endl;
 }
 void ReaderCount()
 {
@@ -21,9 +30,9 @@ void CountBookByCategory()
 	if (l.empty() == false)
 	{
 		CreateCategoryList(l, CatList);
-		cout << "---------------------------------------------------------" << endl;
-		cout << "|              The loai               |    So luong     |" << endl;
-		cout << "---------------------------------------------------------" << endl;
+		cout << "-----------------------------------------------------------------------------" << endl;
+		cout << "|              The loai               | So luong dau sach |  So luong sach  |" << endl;
+		cout << "-----------------------------------------------------------------------------" << endl;
 		CountEachCategory(l, CatList);
 	}
 	else {
@@ -60,6 +69,7 @@ void CountEachCategory(list <Book> l, list <string> &CatList)
 	while (CatList.empty() != true)
 	{
 		int count = 0;
+		int count1 = 0;
 		string temp = CatList.front();
 		for (i = l.begin(); i != l.end(); i++)
 		{
@@ -68,10 +78,11 @@ void CountEachCategory(list <Book> l, list <string> &CatList)
 			if (temp.compare(temp1.Category) == 0)
 			{
 				temp1.Quantity = i->Quantity;
-				count = count + temp1.Quantity;
+				count1 = count1 + temp1.Quantity;
+				count++;
 			}
 		}
-		cout << "| " << setw(35) << left << temp << " | " << setw(15) << count << " |" << endl;
+		cout << "| " << setw(35) << left << temp << " | " << setw(17) << count << " | " << setw(15) << count1 << " |" << endl;
 		cout << "---------------------------------------------------------" << endl;
 		CatList.pop_front();
 	}

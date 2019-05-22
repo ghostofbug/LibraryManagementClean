@@ -1,18 +1,68 @@
-﻿#include "HeaderManagement.h"
-void MenuUpdatePersonalInfo()
+﻿#include "MenuControl.h"
+
+int GetDirect()
 {
-	cout << endl;
-	cout << "   ************************************" << endl;
-	cout << "   |   CAP NHAT THONG TIN NGUOI DUNG  |" << endl;
-	cout << "   ************************************" << endl;
-	cout << "   * 1. Thay doi ten                  *" << endl;
-	cout << "   * 2. Thay doi gioi tinh            *" << endl;
-	cout << "   * 3. Thay doi email                *" << endl;
-	cout << "   * 4. Thay doi dia chi              *" << endl;
-	cout << "   * 5. Thay doi ngay sinh            *" << endl;
-	cout << "   * 0. Quay lai                      *" << endl;
-	cout << "   ************************************" << endl;
-	cout << endl << "Chon chuc nang: ";
+	int direct;
+	cin >> direct;
+	return direct;
+}
+string GetInput()
+{
+	string Input;
+	getline(cin, Input);
+	return Input;
+}
+
+void ChangePassword(UserList &list, string signinuser)
+{
+	string currentpass;
+	string newpass;
+	NodeUser *temp = new NodeUser;
+	for (temp = list.listhead; temp != NULL; temp = temp->next)
+	{
+		if (temp->node.UserId.compare(signinuser) == 0)
+		{
+
+			cout << "Mat khau hien tai    : ";
+			int y = wherey();
+			currentpass = HidePassword(StringSize("Mat khau hien tai    : "), y);
+			cout << "" << endl;
+			if (currentpass.compare(temp->node.PassWord) == 0)
+			{
+				cout << "Mat khau moi         : ";
+				y = wherey();
+				newpass = HidePassword(StringSize("Mat khau moi         : "), y);
+				cout << endl;
+				if (CheckSame(temp->node.UserId, newpass) == false)
+				{
+					cout << "Mat khau trung ten dang nhap, vui long thay doi!" << endl;
+				}
+				else
+				{
+					temp->node.PassWord = newpass;
+					cout << "Xac nhan mat khau moi: ";
+					y = wherey();
+					newpass = HidePassword(StringSize("Xac nhan mat khau moi: "), y);
+					if (newpass.compare(temp->node.PassWord) == 0)
+					{
+						cout << endl;
+						cout << "Doi mat khau thanh cong!" << endl;
+					}
+					else
+					{
+						cout << endl;
+						cout << "Mat khau moi khong khop, vui long thuc hien lai!" << endl;
+						temp->node.PassWord = currentpass;
+					}
+				}
+			}
+			else
+			{
+				cout << "Sai mat khau!" << endl;
+			}
+		}
+	}
+	delete temp;
 }
 void ChangeDateOfBirth(string signinuser, UserList &list)
 {
@@ -104,56 +154,17 @@ void ChangeName(string signinuser, UserList &list)
 	}
 	delete temp;
 }
-void RunMenuUpdatePersonalInfo(string signinuser, UserList &list)
+
+bool SignIn(string ID, string Pass, UserList list, NodeUser *temp)
 {
-	int Direct;
-	do
+	for (temp = list.listhead; temp != NULL; temp = temp->next)
 	{
-		system("cls");
-		DisplayUserInfo(list, signinuser);
-		MenuUpdatePersonalInfo();
-		Direct = GetDirect();
-		if (Direct == 1)
+		if (ID.compare(temp->node.UserId) == 0 && Pass.compare(temp->node.PassWord) == 0)
 		{
-			cin.ignore();
-			ChangeName(signinuser, list);
-			ListToFile(list);
+			return true;
 		}
-		else if (Direct == 2)
-		{
-			ChangeSex(signinuser, list);
-			ListToFile(list);
-		}
-		else if (Direct == 3)
-		{
-			cin.ignore();
-			ChangeEmail(signinuser, list);
-			ListToFile(list);
-		}
-		else if (Direct == 4)
-		{
-			cin.ignore();
-			ChangeAddress(signinuser, list);
-			ListToFile(list);
-		}
-		else if (Direct == 5)
-		{
-			ChangeDateOfBirth(signinuser, list);
-			ListToFile(list);
-		}
-	} while (Direct != 0);
-}
-int GetDirect()
-{
-	int direct;
-	cin >> direct;
-	return direct;
-}
-string GetInput()
-{
-	string Input;
-	getline(cin, Input);
-	return Input;
+	}
+	return false;
 }
 void RunMenuSignIn(UserList &list)
 {
@@ -263,7 +274,60 @@ void RunMenuFunc(string SignInUserID, UserList &List)
 		}
 	} while (direct1 != 0);
 }
-
+void MenuUpdatePersonalInfo()
+{
+	cout << endl;
+	cout << "   ************************************" << endl;
+	cout << "   |   CAP NHAT THONG TIN NGUOI DUNG  |" << endl;
+	cout << "   ************************************" << endl;
+	cout << "   * 1. Thay doi ten                  *" << endl;
+	cout << "   * 2. Thay doi gioi tinh            *" << endl;
+	cout << "   * 3. Thay doi email                *" << endl;
+	cout << "   * 4. Thay doi dia chi              *" << endl;
+	cout << "   * 5. Thay doi ngay sinh            *" << endl;
+	cout << "   * 0. Quay lai                      *" << endl;
+	cout << "   ************************************" << endl;
+	cout << endl << "Chon chuc nang: ";
+}
+void RunMenuUpdatePersonalInfo(string signinuser, UserList &list)
+{
+	int Direct;
+	do
+	{
+		system("cls");
+		DisplayUserInfo(list, signinuser);
+		MenuUpdatePersonalInfo();
+		Direct = GetDirect();
+		if (Direct == 1)
+		{
+			cin.ignore();
+			ChangeName(signinuser, list);
+			ListToFile(list);
+		}
+		else if (Direct == 2)
+		{
+			ChangeSex(signinuser, list);
+			ListToFile(list);
+		}
+		else if (Direct == 3)
+		{
+			cin.ignore();
+			ChangeEmail(signinuser, list);
+			ListToFile(list);
+		}
+		else if (Direct == 4)
+		{
+			cin.ignore();
+			ChangeAddress(signinuser, list);
+			ListToFile(list);
+		}
+		else if (Direct == 5)
+		{
+			ChangeDateOfBirth(signinuser, list);
+			ListToFile(list);
+		}
+	} while (Direct != 0);
+}
 void MenuUserManage()
 {
 	system("cls");
@@ -419,7 +483,6 @@ void MenuBookManage()
 	cout << "   ************************************" << endl;
 	cout << endl << "Chon chuc nang: ";
 }
-
 void RunMenuBookManage(string SignInUserID, UserList userlist)
 {
 	int direct1;

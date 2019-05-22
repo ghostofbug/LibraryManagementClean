@@ -1,214 +1,5 @@
 #include "UserManagement.h"
-void DisplayUserInfo(UserList list, string signinuser)
-{
-	NodeUser *temp = new NodeUser;
-	for (temp = list.listhead; temp != NULL; temp = temp->next)
-	{
-		if (temp->node.UserId.compare(signinuser) == 0)
-		{
-			cout << "Ten nguoi dung		 : " << temp->node.Info.Name << endl;
-			cout << "Gioi tinh                : ";
-			DisplaySex(temp->node.Info.Sex);
-			cout << endl;
-			cout << "Email                    : " << temp->node.Info.Email << endl;
-			cout << "Dia chi                  : " << temp->node.Info.Address << endl;
-			cout << "Ngay sinh                : ";
-			DisplayDay(temp->node.Info.Birthday);
-			cout << endl;
-			cout << "CMND(khong the sua)      : " << temp->node.Info.CitizenId << endl;
-			cout << "===========================================================================" << endl;
-		}
-	}
-}
-void GrantPermission(UserList &list, NodeUser * temp, NodeUser *temp1)
-{
 
-	system("cls");
-	int runtime = 0;
-	for (;;)
-	{
-		bool check = false;
-		system("cls");
-		cout << "   ---------------------------------" << endl;
-		cout << "   |      DANH SACH NGUOI DUNG     |" << endl;
-		cout << "   ---------------------------------" << endl;
-		cout << "---------------------------------------------------------------------------------------------------------------------------" << endl;
-		cout << "|     UserID      |    Password     |     CMND     |       Dia chi        |        Email         |  Chuc vu  | Tinh trang |" << endl;
-		cout << "---------------------------------------------------------------------------------------------------------------------------" << endl;
-		for (temp = list.listhead; temp != NULL; temp = temp->next)
-		{
-			cout << "| ";
-			cout << setw(15) << left << temp->node.UserId;
-			cout << " | ";
-			cout << setw(15) << HidePassWordV2(temp->node.PassWord);
-			cout << " | ";
-			cout << setw(12) << temp->node.Info.CitizenId;
-			cout << " | ";
-			cout << setw(20) << temp->node.Info.Address;
-			cout << " | ";
-			cout << setw(20) << temp->node.Info.Email;
-			cout << " | ";
-			if (temp->node.Stats == 0)
-			{
-				if (temp->node.Pos == 1)
-				{
-					cout << setw(9) << "Admin";
-				}
-				else if (temp->node.Pos == 0)
-				{
-					cout << setw(9) << "Quan ly";
-				}
-				else
-				{
-					cout << setw(9) << "Nhan vien";
-				}
-				cout << " | ";
-				cout << setw(10) << "Activated";
-			}
-			else
-			{
-				cout << setw(9) << " ";
-				cout << " | ";
-				cout << setw(10) << "Blocked";
-			}
-			cout << " |" << endl;
-			cout << "---------------------------------------------------------------------------------------------------------------------------" << endl;
-		}
-		string text;
-		string validate;
-		int y = wherey();
-		
-		cout << "Nhan Y de phan quyen,nhan bat ky de thoat: ";
-		if (runtime == 0)
-		{
-			cin.ignore();
-		}
-		getline(cin, validate);
-		if (validate.compare("y") == 0 || validate.compare("Y") == 0)
-		{
-			gotoxy(0, y);
-			for (int i = 0; i < (StringSize("Nhan Y de phan quyen,nhan bat ky de thoat: ") + StringSize(validate)); i++)
-			{
-				cout << " ";
-			}
-			gotoxy(0, y);
-			cout << "Nhap UserId can phan quyen: ";
-			getline(cin, text);
-			for (temp1 = list.listhead; temp1 != NULL; temp1 = temp1->next)
-			{
-				NodeUser* temp2 = new NodeUser;
-				if (text.compare(temp1->node.UserId) == 0 && CheckAdmin(temp1->node.UserId, list, temp2) == false)
-				{
-					cout << "Phan quyen (0: Quan ly /-1: Nhan vien /so khac: khoa tai khoan): ";
-					string text = "Phan quyen (0: Quan ly /-1: Nhan vien /so khac: khoa tai khoan): ";
-					COORD coord;
-					coord.X = wherex();
-					coord.Y = wherey();
-					while (!(cin >> temp1->node.Pos))
-					{
-						gotoxy(coord.X, coord.Y);
-						cin.clear();
-						cin.ignore();
-					}
-					if (temp1->node.Pos != 0 && temp1->node.Pos != -1)
-					{
-						temp1->node.Stats = 1;
-						temp1->node.Pos = -2;
-					}
-					else
-					{
-						temp1->node.Stats = 0;
-					}
-					ListToFile(list);
-					check = true;
-					cin.ignore();
-				}
-				else
-				{
-
-				}
-			}
-			if (check == false)
-			{
-				cout << "Khong the thuc hien! Nguoi dung la Admin/khong ton tai!" << endl;
-				system("pause");
-			}
-			runtime++;
-		}
-		else
-		{
-			break;
-		}
-	}
-}
-
-void DeleteList(UserList &list)
-{
-	NodeUser *temp1 = list.listhead;
-	NodeUser *temp2 = NULL;
-	while (temp1 != NULL)
-	{
-		temp2 = temp1->next;
-		delete temp1;
-		temp1 = temp2;
-	}
-	delete temp2;
-	list.listhead = NULL;
-}
-bool CheckBlocked(string signinuser, UserList list, NodeUser *temp)
-{
-	for (temp = list.listhead; temp != NULL; temp = temp->next)
-	{
-		if ((signinuser.compare(temp->node.UserId) == 0 && temp->node.Stats == 0))
-		{
-			return true;
-		}
-	}
-	return false;
-}
-bool CheckManager(string signinuser, UserList list, NodeUser *temp)
-{
-	for (temp = list.listhead; temp != NULL; temp = temp->next)
-	{
-		if (signinuser.compare(temp->node.UserId) == 0 && temp->node.Pos == 0)
-		{
-			return true;
-		}
-	}
-	return false;
-}
-void ListToFile(UserList list)
-{
-	ofstream addfile;
-	NodeUser *temp = new NodeUser;
-	addfile.open("useraccount.txt");
-	for (temp = list.listhead; temp != NULL; temp = temp->next)
-	{
-		if (temp->node.Pos == 1 && temp->node.UserId.compare("useradmin") == 0)
-		{
-			ofstream addadmin;
-			addadmin.open("systemadmin.txt");
-			addadmin << temp->node.UserId << "," << EncryptPassWord(temp->node.PassWord) << "," << temp->node.Info.Name << ",";
-			addadmin << temp->node.Info.Email << "," << temp->node.Info.Address << "," << temp->node.Info.CitizenId << ",";
-			addadmin << temp->node.Info.Birthday.d << "," << temp->node.Info.Birthday.m << "," << temp->node.Info.Birthday.y << "," << temp->node.Info.Sex << "," << temp->node.Pos << "," << temp->node.Stats << endl;
-			addadmin.close();
-		}
-		else
-		{
-			
-			addfile << temp->node.UserId << "," << EncryptPassWord(temp->node.PassWord) << ",";
-			addfile << temp->node.Info.CitizenId << ",";
-			addfile << temp->node.Info.Address << ",";
-			addfile << temp->node.Info.Email << ",";
-			addfile << temp->node.Info.Name << ",";
-			addfile << temp->node.Info.Birthday.d << "," << temp->node.Info.Birthday.m << "," << temp->node.Info.Birthday.y << ",";
-			addfile << temp->node.Info.Sex << "," << temp->node.Pos << "," << temp->node.Stats << endl;
-		}
-		
-	}
-	addfile.close();
-	delete temp;
-}
 User Admin()
 {
 	User admin;
@@ -268,106 +59,6 @@ void CreateAdmin(UserList &list, User ADmin, NodeUser *NodeAdmin)
 		AddTail(list, NodeAdmin);
 		addamin.close();
 	}
-}
-bool CheckIDCard(string ID)
-{
-	int check = CountIDCard(ID);
-	if (check == 12 || check == 9)
-	{
-		return true;
-	}
-	return false;
-}
-int CountIDCard(string ID)
-{
-
-	int count = 0;
-	for (int i = 0; i < ID.length(); i++)
-	{
-		if (ID[i] >= '0' && ID[i] <= '9')
-		{
-			count++;
-		}
-	}
-	return count;
-}
-bool CheckSame(string username, string password)
-{
-	if (username.compare(password) == 0)
-	{
-		return false;
-	}
-	return true;
-}
-void ChangePassword(UserList &list, string signinuser)
-{
-	string currentpass;
-	string newpass;
-	NodeUser *temp = new NodeUser;
-	for (temp = list.listhead; temp != NULL; temp = temp->next)
-	{
-		if (temp->node.UserId.compare(signinuser) == 0)
-		{
-
-			cout << "Mat khau hien tai    : ";
-			int y = wherey();
-			currentpass = HidePassword(StringSize("Mat khau hien tai    : "), y);
-			cout << "" << endl;
-			if (currentpass.compare(temp->node.PassWord) == 0)
-			{
-				cout << "Mat khau moi         : ";
-				y = wherey();
-				newpass = HidePassword(StringSize("Mat khau moi         : "), y);
-				cout << endl;
-				if (CheckSame(temp->node.UserId, newpass) == false)
-				{
-					cout << "Mat khau trung ten dang nhap, vui long thay doi!" << endl;
-				}
-				else
-				{
-					temp->node.PassWord = newpass;
-					cout << "Xac nhan mat khau moi: ";
-					y = wherey();
-					newpass = HidePassword(StringSize("Xac nhan mat khau moi: "), y);
-					if (newpass.compare(temp->node.PassWord) == 0)
-					{
-						cout << endl;
-						cout << "Doi mat khau thanh cong!" << endl;
-					}
-					else
-					{
-						cout << endl;
-						cout << "Mat khau moi khong khop, vui long thuc hien lai!" << endl;
-						temp->node.PassWord = currentpass;
-					}
-				}
-			}
-			else
-			{
-				cout << "Sai mat khau!" << endl;
-			}
-		}
-	}
-	delete temp;
-}
-bool CheckCreateAccount(UserList list, string registeruser, NodeUser *temp)
-{
-	if (list.listhead == NULL)
-	{
-		return true;
-	}
-	else
-	{
-		for (temp = list.listhead; temp != NULL; temp = temp->next)
-		{
-			if (temp->node.UserId.compare(registeruser) == 0)
-			{
-
-				return false;
-			}
-		}
-	}
-	return true;
 }
 void InitializeUserList(UserList &list)
 {
@@ -477,23 +168,260 @@ User Register(UserList list)
 	delete temp;
 	return user;
 }
+void GrantPermission(UserList &list, NodeUser * temp, NodeUser *temp1)
+{
+
+	system("cls");
+	int runtime = 0;
+	for (;;)
+	{
+		bool check = false;
+		system("cls");
+		cout << "   ---------------------------------" << endl;
+		cout << "   |      DANH SACH NGUOI DUNG     |" << endl;
+		cout << "   ---------------------------------" << endl;
+		cout << "---------------------------------------------------------------------------------------------------------------------------" << endl;
+		cout << "|     UserID      |    Password     |     CMND     |       Dia chi        |        Email         |  Chuc vu  | Tinh trang |" << endl;
+		cout << "---------------------------------------------------------------------------------------------------------------------------" << endl;
+		for (temp = list.listhead; temp != NULL; temp = temp->next)
+		{
+			cout << "| ";
+			cout << setw(15) << left << temp->node.UserId;
+			cout << " | ";
+			cout << setw(15) << HidePassWordV2(temp->node.PassWord);
+			cout << " | ";
+			cout << setw(12) << temp->node.Info.CitizenId;
+			cout << " | ";
+			cout << setw(20) << temp->node.Info.Address;
+			cout << " | ";
+			cout << setw(20) << temp->node.Info.Email;
+			cout << " | ";
+			if (temp->node.Stats == 0)
+			{
+				if (temp->node.Pos == 1)
+				{
+					cout << setw(9) << "Admin";
+				}
+				else if (temp->node.Pos == 0)
+				{
+					cout << setw(9) << "Quan ly";
+				}
+				else
+				{
+					cout << setw(9) << "Nhan vien";
+				}
+				cout << " | ";
+				cout << setw(10) << "Activated";
+			}
+			else
+			{
+				cout << setw(9) << " ";
+				cout << " | ";
+				cout << setw(10) << "Blocked";
+			}
+			cout << " |" << endl;
+			cout << "---------------------------------------------------------------------------------------------------------------------------" << endl;
+		}
+		string text;
+		string validate;
+		int y = wherey();
+		
+		cout << "Nhan Y de phan quyen,nhan bat ky de thoat: ";
+		if (runtime == 0)
+		{
+			cin.ignore();
+		}
+		getline(cin, validate);
+		if (validate.compare("y") == 0 || validate.compare("Y") == 0)
+		{
+			gotoxy(0, y);
+			for (int i = 0; i < (StringSize("Nhan Y de phan quyen,nhan bat ky de thoat: ") + StringSize(validate)); i++)
+			{
+				cout << " ";
+			}
+			gotoxy(0, y);
+			cout << "Nhap UserId can phan quyen: ";
+			getline(cin, text);
+			for (temp1 = list.listhead; temp1 != NULL; temp1 = temp1->next)
+			{
+				NodeUser* temp2 = new NodeUser;
+				if (text.compare(temp1->node.UserId) == 0 && CheckAdmin(temp1->node.UserId, list, temp2) == false)
+				{
+					cout << "Phan quyen (0: Quan ly /-1: Nhan vien /so khac: khoa tai khoan): ";
+					string text = "Phan quyen (0: Quan ly /-1: Nhan vien /so khac: khoa tai khoan): ";
+					COORD coord;
+					coord.X = wherex();
+					coord.Y = wherey();
+					while (!(cin >> temp1->node.Pos))
+					{
+						gotoxy(coord.X, coord.Y);
+						cin.clear();
+						cin.ignore();
+					}
+					if (temp1->node.Pos != 0 && temp1->node.Pos != -1)
+					{
+						temp1->node.Stats = 1;
+						temp1->node.Pos = -2;
+					}
+					else
+					{
+						temp1->node.Stats = 0;
+					}
+					ListToFile(list);
+					check = true;
+					cin.ignore();
+				}
+			}
+			if (check == false)
+			{
+				cout << "Khong the thuc hien! Nguoi dung la Admin/khong ton tai!" << endl;
+				system("pause");
+			}
+			runtime++;
+		}
+		else
+		{
+			break;
+		}
+	}
+}
+void DeleteList(UserList &list)
+{
+	NodeUser *temp1 = list.listhead;
+	NodeUser *temp2 = NULL;
+	while (temp1 != NULL)
+	{
+		temp2 = temp1->next;
+		delete temp1;
+		temp1 = temp2;
+	}
+	delete temp2;
+	list.listhead = NULL;
+}
+
+bool CheckCreateAccount(UserList list, string registeruser, NodeUser *temp)
+{
+	if (list.listhead == NULL)
+	{
+		return true;
+	}
+	else
+	{
+		for (temp = list.listhead; temp != NULL; temp = temp->next)
+		{
+			if (temp->node.UserId.compare(registeruser) == 0)
+			{
+
+				return false;
+			}
+		}
+	}
+	return true;
+}
+bool CheckSame(string username, string password)
+{
+	if (username.compare(password) == 0)
+	{
+		return false;
+	}
+	return true;
+}
+bool CheckIDCard(string ID)
+{
+	int check = CountIDCard(ID);
+	if (check == 12 || check == 9)
+	{
+		if (check == ID.length())
+		{
+			return true;
+		}
+	}
+	return false;
+}
+int CountIDCard(string ID)
+{
+
+	int count = 0;
+	for (int i = 0; i < ID.length(); i++)
+	{
+		if (ID[i] >= '0' && ID[i] <= '9')
+		{
+			count++;
+		}
+	}
+	return count;
+}
+bool CheckAdmin(string signinuser, UserList list, NodeUser *temp)
+{
+	for (temp = list.listhead; temp != NULL; temp = temp->next)
+	{
+		if (signinuser.compare(temp->node.UserId) == 0 && temp->node.Pos == 1)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+bool CheckManager(string signinuser, UserList list, NodeUser *temp)
+{
+	for (temp = list.listhead; temp != NULL; temp = temp->next)
+	{
+		if (signinuser.compare(temp->node.UserId) == 0 && temp->node.Pos == 0)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+bool CheckBlocked(string signinuser, UserList list, NodeUser *temp)
+{
+	for (temp = list.listhead; temp != NULL; temp = temp->next)
+	{
+		if ((signinuser.compare(temp->node.UserId) == 0 && temp->node.Stats == 0))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void AddUserToList(UserList &list, User user, NodeUser *User)
 {
 	User = AddUser(user);
 	AddTail(list, User);
 	ListToFile(list);
 }
-
-bool SignIn(string ID, string Pass, UserList list, NodeUser *temp)
+void ListToFile(UserList list)
 {
+	ofstream addfile;
+	NodeUser *temp = new NodeUser;
+	addfile.open("useraccount.txt");
 	for (temp = list.listhead; temp != NULL; temp = temp->next)
 	{
-		if (ID.compare(temp->node.UserId) == 0 && Pass.compare(temp->node.PassWord) == 0)
+		if (temp->node.Pos == 1 && temp->node.UserId.compare("useradmin") == 0)
 		{
-			return true;
+			ofstream addadmin;
+			addadmin.open("systemadmin.txt");
+			addadmin << temp->node.UserId << "," << EncryptPassWord(temp->node.PassWord) << "," << temp->node.Info.Name << ",";
+			addadmin << temp->node.Info.Email << "," << temp->node.Info.Address << "," << temp->node.Info.CitizenId << ",";
+			addadmin << temp->node.Info.Birthday.d << "," << temp->node.Info.Birthday.m << "," << temp->node.Info.Birthday.y << "," << temp->node.Info.Sex << "," << temp->node.Pos << "," << temp->node.Stats << endl;
+			addadmin.close();
 		}
+		else
+		{
+
+			addfile << temp->node.UserId << "," << EncryptPassWord(temp->node.PassWord) << ",";
+			addfile << temp->node.Info.CitizenId << ",";
+			addfile << temp->node.Info.Address << ",";
+			addfile << temp->node.Info.Email << ",";
+			addfile << temp->node.Info.Name << ",";
+			addfile << temp->node.Info.Birthday.d << "," << temp->node.Info.Birthday.m << "," << temp->node.Info.Birthday.y << ",";
+			addfile << temp->node.Info.Sex << "," << temp->node.Pos << "," << temp->node.Stats << endl;
+		}
+
 	}
-	return false;
+	addfile.close();
+	delete temp;
 }
 void AddFileTolist(UserList &list, NodeUser *user)
 {
@@ -528,15 +456,25 @@ void AddFileTolist(UserList &list, NodeUser *user)
 	}
 	adddata.close();
 }
-bool CheckAdmin(string signinuser, UserList list, NodeUser *temp)
+
+void DisplayUserInfo(UserList list, string signinuser)
 {
+	NodeUser *temp = new NodeUser;
 	for (temp = list.listhead; temp != NULL; temp = temp->next)
 	{
-		if (signinuser.compare(temp->node.UserId) == 0 && temp->node.Pos == 1)
+		if (temp->node.UserId.compare(signinuser) == 0)
 		{
-			return true;
+			cout << "Ten nguoi dung		 : " << temp->node.Info.Name << endl;
+			cout << "Gioi tinh                : ";
+			DisplaySex(temp->node.Info.Sex);
+			cout << endl;
+			cout << "Email                    : " << temp->node.Info.Email << endl;
+			cout << "Dia chi                  : " << temp->node.Info.Address << endl;
+			cout << "Ngay sinh                : ";
+			DisplayDay(temp->node.Info.Birthday);
+			cout << endl;
+			cout << "CMND(khong the sua)      : " << temp->node.Info.CitizenId << endl;
+			cout << "===========================================================================" << endl;
 		}
 	}
-	return false;
 }
-
