@@ -83,7 +83,7 @@ void CountEachCategory(list <Book> l, list <string> &CatList)
 			}
 		}
 		cout << "| " << setw(35) << left << temp << " | " << setw(17) << count << " | " << setw(15) << count1 << " |" << endl;
-		cout << "---------------------------------------------------------" << endl;
+		cout << "-----------------------------------------------------------------------------" << endl;
 		CatList.pop_front();
 	}
 }
