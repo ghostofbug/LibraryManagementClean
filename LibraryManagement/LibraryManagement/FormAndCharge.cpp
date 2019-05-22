@@ -778,7 +778,7 @@ void LostBook(list<BorrowForm>&bf, list<Bill>BILL)
 						k->Bookname[pos].Borrowed = k->Bookname[pos].Borrowed - numlost;
 						bill.BillID = printRandomNumber();
 						bill.Charge = *k;
-						bill.charge = (static_cast<unsigned long int>(numlost * 2 * k->Bookname[pos].Price)) + (static_cast<unsigned long int>(numlost * 2 * k->Bookname[pos].Price))*0.1;
+						bill.charge = (static_cast<unsigned long int>(numlost * 2 * k->Bookname[pos].Price))*11/10 ;
 						bill.reason = "Mat " + num + " cuon " + k->Bookname[pos].Name;
 						cout << endl;
 						LoadingDot("Dang tai hoa don");
