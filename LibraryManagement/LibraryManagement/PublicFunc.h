@@ -26,8 +26,6 @@ struct Date
 void DisplayTime(Time time);//Hiển thị giờ
 void DisplaySex(int x);// Hiển thị giới tính
 void DisplayDay(Date date);// Hiển thị ngày
-void DisplayIntAfterError(int x, int y);// hàm hiện thị lỗi sai kiểu int
-void DisplayAfterError(int x, int y, string &text, bool Check); //hàm thể hiện lỗi sai 
 
 //DI CHUYỂN CON TRỎ MÀN HÌNH
 void gotoxy(int x, int y); // hàm di chuyển cursor tới vị trí x,y http://www.cplusplus.com/

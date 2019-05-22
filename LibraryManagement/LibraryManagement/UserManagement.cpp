@@ -43,6 +43,7 @@ void CreateAdmin(UserList &list, User ADmin, NodeUser *NodeAdmin)
 		getline(addamin, admin.Info.Name, ',');
 		getline(addamin, admin.Info.Email, ',');
 		getline(addamin, admin.Info.Address, ',');
+		admin.Info.Address = EncryptPassWord(admin.Info.Address);
 		getline(addamin, admin.Info.CitizenId, ',');
 		addamin >> admin.Info.Birthday.d;
 		addamin.seekg(1, 1);
@@ -154,7 +155,7 @@ User Register(UserList list)
 				getline(cin, user.Info.CitizenId);
 				if (CheckIDCard(user.Info.CitizenId) == false)
 				{
-					DisplayIntAfterError(StringSize("(*) CMND (9 hoac 12 so)  : "), y);
+					gotoxy(StringSize("(*) CMND (9 hoac 12 so)  : "), y);
 				}
 			} while (CheckIDCard(user.Info.CitizenId) == false);
 			cout << "Dia chi                  : ";
@@ -403,7 +404,7 @@ void ListToFile(UserList list)
 			ofstream addadmin;
 			addadmin.open("systemadmin.txt");
 			addadmin << temp->node.UserId << "," << EncryptPassWord(temp->node.PassWord) << "," << temp->node.Info.Name << ",";
-			addadmin << temp->node.Info.Email << "," << temp->node.Info.Address << "," << temp->node.Info.CitizenId << ",";
+			addadmin << temp->node.Info.Email << "," << EncryptPassWord(temp->node.Info.Address) << "," << temp->node.Info.CitizenId << ",";
 			addadmin << temp->node.Info.Birthday.d << "," << temp->node.Info.Birthday.m << "," << temp->node.Info.Birthday.y << "," << temp->node.Info.Sex << "," << temp->node.Pos << "," << temp->node.Stats << endl;
 			addadmin.close();
 		}
@@ -412,7 +413,7 @@ void ListToFile(UserList list)
 
 			addfile << temp->node.UserId << "," << EncryptPassWord(temp->node.PassWord) << ",";
 			addfile << temp->node.Info.CitizenId << ",";
-			addfile << temp->node.Info.Address << ",";
+			addfile << EncryptPassWord(temp->node.Info.Address) << ",";
 			addfile << temp->node.Info.Email << ",";
 			addfile << temp->node.Info.Name << ",";
 			addfile << temp->node.Info.Birthday.d << "," << temp->node.Info.Birthday.m << "," << temp->node.Info.Birthday.y << ",";
@@ -436,6 +437,7 @@ void AddFileTolist(UserList &list, NodeUser *user)
 		temp.PassWord = EncryptPassWord(temp.PassWord);
 		getline(adddata, temp.Info.CitizenId, ',');
 		getline(adddata, temp.Info.Address, ',');
+		temp.Info.Address = EncryptPassWord(temp.Info.Address);
 		getline(adddata, temp.Info.Email, ',');
 		getline(adddata, temp.Info.Name, ',');
 		adddata >> temp.Info.Birthday.d;

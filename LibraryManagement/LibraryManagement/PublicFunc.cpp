@@ -51,26 +51,6 @@ void DisplayTime(Time time)
 	}
 	cout << time.Secs;
 }
-void DisplayIntAfterError(int x, int y)
-{
-	gotoxy(x, y);
-}
-void DisplayAfterError(int x, int y,string &text,bool Check)
-{
-	string text_temp = text;
-	text = "";
-	gotoxy(x, y);
-	if (Check == false)
-	{
-		cout << text_temp;
-		gotoxy(x + text_temp.size(), y);
-	}
-	else
-	{
-		cout << text;
-	}
-}
-
 void gotoxy(int x, int y)
 {
 	COORD coord;
@@ -114,7 +94,8 @@ int FileSize(string file)
 }
 int StringSize(string text)
 {
-	return text.size();
+	int x = static_cast<int>(text.size());
+	return x;
 }
 int CountNumber(int n)
 {

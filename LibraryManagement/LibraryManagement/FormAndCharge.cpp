@@ -617,7 +617,7 @@ void ReturnBook(list<BorrowForm>&bf, list<Bill>BILL)
 			ExpectReturn.tm_sec = i->ExpectTime.Secs;
 			time_t take = mktime(&ExpectReturn);
 			localtime_s(&ExpectReturn, &take);
-			int tong = (get - take) / 86400;
+			int tong = static_cast<int>((get - take) / 86400);
 			if (tong >= 1)
 			{
 				int fee = FeeCharge(tong);
