@@ -129,32 +129,6 @@ bool CheckIDForm(string ID)
 	temp.erase(j, k);
 	return false;
 }
-bool CheckSameID(string ID)
-{
-	list<BorrowForm>bf;
-	BorrowFormToList(bf);
-	list<BorrowForm>::iterator i;
-	for (i = bf.begin(); i != bf.end(); i++)
-	{
-		if (ID.compare(i->FormID) == 0)
-		{
-			return false;
-		}
-	}
-	return true;
-}
-bool CheckID(string ID, list<BorrowForm>bf)
-{
-	list<BorrowForm>::iterator i;
-	for (i = bf.begin(); i != bf.end(); i++)
-	{
-		if (ID.compare(i->FormID) == 0)
-		{
-			return true;
-		}
-	}
-	return false;
-}
 bool CheckSameIDreader(string getIDreader)
 {
 	list<BorrowForm>bf;
@@ -396,7 +370,7 @@ void CreateBorrowForm(list <BorrowForm> &bf)
 			do
 			{
 				Borrowbook.FormID = printRandomString();
-			} while (CheckSameID(Borrowbook.FormID) == false);
+			} while (CheckIDForm(Borrowbook.FormID) == false);
 			LoadingDot("Dang tai du lieu, xin hay doi trong giay lat");
 			PrintForm(Borrowbook);
 			cout << "Nhan 'Y' de xac nhan lap phieu muon sach, nhan phim khac de huy bo: ";
