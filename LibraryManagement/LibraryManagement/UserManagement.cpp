@@ -27,10 +27,11 @@ void CreateAdmin(UserList &list, User ADmin, NodeUser *NodeAdmin)
 		ofstream addadmin;
 		addadmin.open("systemadmin.txt");
 		string save = NodeAdmin->node.PassWord;
+		string save1 = NodeAdmin->node.Info.Address;
 		stream2hex(save, save);
-		stream2hex(NodeAdmin->node.Info.Address, NodeAdmin->node.Info.Address);
+		stream2hex(save1,save1);
 		addadmin << NodeAdmin->node.UserId << "," << save<< "," << NodeAdmin->node.Info.Name << ",";
-		addadmin << NodeAdmin->node.Info.Email << "," << NodeAdmin->node.Info.Address << "," << NodeAdmin->node.Info.CitizenId << ",";
+		addadmin << NodeAdmin->node.Info.Email << "," << save1 << "," << NodeAdmin->node.Info.CitizenId << ",";
 		addadmin << NodeAdmin->node.Info.Birthday.d << "," << NodeAdmin->node.Info.Birthday.m << "," << NodeAdmin->node.Info.Birthday.y << "," << NodeAdmin->node.Info.Sex << ",";
 		addadmin << NodeAdmin->node.Pos << "," << NodeAdmin->node.Stats << endl;
 		addadmin.close();
@@ -403,23 +404,25 @@ void ListToFile(UserList list)
 	addfile.open("useraccount.txt");
 	for (temp = list.listhead; temp != NULL; temp = temp->next)
 	{
-		stream2hex(temp->node.PassWord, temp->node.PassWord);
-		stream2hex(temp->node.Info.Address, temp->node.Info.Address);
+		string save1 = temp->node.PassWord;
+		string save2 = temp->node.Info.Address;
+		stream2hex(save1,save1);
+		stream2hex(save2,save2);
 		if (temp->node.Pos == 1 && temp->node.UserId.compare("useradmin") == 0)
 		{
 			ofstream addadmin;
 			addadmin.open("systemadmin.txt");
-			addadmin << temp->node.UserId << "," << temp->node.PassWord << "," << temp->node.Info.Name << ",";
-			addadmin << temp->node.Info.Email << "," << temp->node.Info.Address<< "," << temp->node.Info.CitizenId << ",";
+			addadmin << temp->node.UserId << "," << save1 << "," << temp->node.Info.Name << ",";
+			addadmin << temp->node.Info.Email << "," << save2<< "," << temp->node.Info.CitizenId << ",";
 			addadmin << temp->node.Info.Birthday.d << "," << temp->node.Info.Birthday.m << "," << temp->node.Info.Birthday.y << "," << temp->node.Info.Sex << "," << temp->node.Pos << "," << temp->node.Stats << endl;
 			addadmin.close();
 		}
 		else
 		{
 			
-			addfile << temp->node.UserId << "," <<temp->node.PassWord  << ",";
+			addfile << temp->node.UserId << "," <<save1  << ",";
 			addfile << temp->node.Info.CitizenId << ",";
-			addfile << temp->node.Info.Address << ",";
+			addfile << save2 << ",";
 			addfile << temp->node.Info.Email << ",";
 			addfile << temp->node.Info.Name << ",";
 			addfile << temp->node.Info.Birthday.d << "," << temp->node.Info.Birthday.m << "," << temp->node.Info.Birthday.y << ",";
