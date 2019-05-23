@@ -26,8 +26,10 @@ void CreateAdmin(UserList &list, User ADmin, NodeUser *NodeAdmin)
 		AddTail(list, NodeAdmin);
 		ofstream addadmin;
 		addadmin.open("systemadmin.txt");
-		stream2hex(NodeAdmin->node.PassWord, NodeAdmin->node.PassWord);
-		addadmin << NodeAdmin->node.UserId << "," << NodeAdmin->node.PassWord << "," << NodeAdmin->node.Info.Name << ",";
+		string save = NodeAdmin->node.PassWord;
+		stream2hex(save, save);
+		stream2hex(NodeAdmin->node.Info.Address, NodeAdmin->node.Info.Address);
+		addadmin << NodeAdmin->node.UserId << "," << save<< "," << NodeAdmin->node.Info.Name << ",";
 		addadmin << NodeAdmin->node.Info.Email << "," << NodeAdmin->node.Info.Address << "," << NodeAdmin->node.Info.CitizenId << ",";
 		addadmin << NodeAdmin->node.Info.Birthday.d << "," << NodeAdmin->node.Info.Birthday.m << "," << NodeAdmin->node.Info.Birthday.y << "," << NodeAdmin->node.Info.Sex << ",";
 		addadmin << NodeAdmin->node.Pos << "," << NodeAdmin->node.Stats << endl;
@@ -43,6 +45,7 @@ void CreateAdmin(UserList &list, User ADmin, NodeUser *NodeAdmin)
 		hex2stream(admin.PassWord,admin.PassWord);
 		getline(addamin, admin.Info.Name, ',');
 		getline(addamin, admin.Info.Email, ',');
+		hex2stream(admin.Info.Email, admin.Info.Email);
 		getline(addamin, admin.Info.Address, ',');
 		getline(addamin, admin.Info.CitizenId, ',');
 		addamin >> admin.Info.Birthday.d;
@@ -401,6 +404,7 @@ void ListToFile(UserList list)
 	for (temp = list.listhead; temp != NULL; temp = temp->next)
 	{
 		stream2hex(temp->node.PassWord, temp->node.PassWord);
+		stream2hex(temp->node.Info.Address, temp->node.Info.Address);
 		if (temp->node.Pos == 1 && temp->node.UserId.compare("useradmin") == 0)
 		{
 			ofstream addadmin;
@@ -439,6 +443,7 @@ void AddFileTolist(UserList &list, NodeUser *user)
 		hex2stream(temp.PassWord,temp.PassWord);
 		getline(adddata, temp.Info.CitizenId, ',');
 		getline(adddata, temp.Info.Address, ',');
+		hex2stream(temp.Info.Address, temp.Info.Address);
 		getline(adddata, temp.Info.Email, ',');
 		getline(adddata, temp.Info.Name, ',');
 		adddata >> temp.Info.Birthday.d;
