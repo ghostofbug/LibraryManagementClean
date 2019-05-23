@@ -626,7 +626,7 @@ void ReturnBook(list<BorrowForm>&bf, list<Bill>BILL)
 				cout << fee << endl;
 				cout << CountNumber(fee) << endl;
 				bill.Charge = *i;
-				bill.BillID = printRandomNumber();
+				bill.BillID = printRandomNumber(10);
 				bill.charge = static_cast<unsigned long int>(fee + fee * 0.1);
 				bill.reason = "Tre han tra sach";
 				LoadingDot("Dang tien hanh tao bien lai phat, xin hay doi trong giay lat");
@@ -750,7 +750,7 @@ void LostBook(list<BorrowForm>&bf, list<Bill>BILL)
 					if (keypressed == (int)'y' || keypressed == (int)'Y')
 					{
 						k->Bookname[pos].Borrowed = k->Bookname[pos].Borrowed - numlost;
-						bill.BillID = printRandomNumber();
+						bill.BillID = printRandomNumber(10);
 						bill.Charge = *k;
 						bill.charge = (static_cast<unsigned long int>(numlost * 2 * k->Bookname[pos].Price))*11/10 ;
 						bill.reason = "Mat " + num + " cuon " + k->Bookname[pos].Name;

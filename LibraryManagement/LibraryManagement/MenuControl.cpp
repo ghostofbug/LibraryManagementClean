@@ -25,13 +25,13 @@ void ChangePassword(UserList &list, string signinuser)
 
 			cout << "Mat khau hien tai    : ";
 			int y = wherey();
-			currentpass = HidePassword(StringSize("Mat khau hien tai    : "), y);
+			currentpass = HidePassword(StringSize("Mat khau hien tai    : "), y,1);
 			cout << "" << endl;
 			if (currentpass.compare(temp->node.PassWord) == 0)
 			{
-				cout << "Mat khau moi         : ";
+				cout << "Mat khau moi (toi thieu 6 ky tu)    : ";
 				y = wherey();
-				newpass = HidePassword(StringSize("Mat khau moi         : "), y);
+				newpass = HidePassword(StringSize("Mat khau moi (toi thieu 6 ky tu)    : "), y,0);
 				cout << endl;
 				if (CheckSame(temp->node.UserId, newpass) == false)
 				{
@@ -42,7 +42,7 @@ void ChangePassword(UserList &list, string signinuser)
 					temp->node.PassWord = newpass;
 					cout << "Xac nhan mat khau moi: ";
 					y = wherey();
-					newpass = HidePassword(StringSize("Xac nhan mat khau moi: "), y);
+					newpass = HidePassword(StringSize("Xac nhan mat khau moi: "), y,1);
 					if (newpass.compare(temp->node.PassWord) == 0)
 					{
 						cout << endl;
@@ -149,7 +149,7 @@ void ChangeName(string signinuser, UserList &list)
 		if (temp->node.UserId.compare(signinuser) == 0)
 		{
 			cout << "Nhap ten moi: " << endl;
-			getline(cin, temp->node.Info.Name);
+			temp->node.Info.Name = AvoidNullString("Nhap ten moi: ");
 		}
 	}
 	delete temp;
@@ -187,7 +187,7 @@ void RunMenuSignIn(UserList &list)
 			int x = static_cast<int>(text.size());
 			int y = wherey();
 			y = static_cast<int>(y);
-			getPass = HidePassword(x, y);
+			getPass = HidePassword(x, y,1);
 			NodeUser *temp = new NodeUser;
 			if (SignIn(getUserId, getPass, list, temp) == true && CheckBlocked(getUserId, list, temp) == true)
 			{
@@ -372,7 +372,14 @@ void RunMenuUserManage(string SignInUserID, UserList &list)
 				User user;
 				cin.ignore();
 				user = Register(list);
-				AddUserToList(list, user, nodeuser);
+				if (user.success == true)
+				{
+					AddUserToList(list, user, nodeuser);
+				}
+				else
+				{
+					cout << "Tai khoan khong duoc khoi tao" << endl;
+				}
 			}
 			else
 			{

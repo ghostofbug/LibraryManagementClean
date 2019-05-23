@@ -135,61 +135,54 @@ void CreateReader(list <Reader> &l)
 	cout << "   ---------------------------------" << endl;
 	cout << "   |          THEM DOC GIA         |" << endl;
 	cout << "   ---------------------------------" << endl;
-
-	cout << "Nhap ma doc gia: ";
-	cin >> temp.ID;
-	if (CheckCreateReader(temp.ID) == false)
+	cout << "Ma doc gia               : ";
+	temp.ID = "DG"+printRandomNumber(5);
+	do
 	{
-		cout << "Ma doc gia da ton tai!" << endl;
-		temp.ID = "0";
+		temp.ID = "DG" + printRandomNumber(5);
+	} while (CheckCreateReader(temp.ID) == false);
+	cout << temp.ID << endl;
+	cout << "Ho va ten                : ";
+	temp.Info.Name = AvoidNullString("Ho va ten                : ");
+	cout << "Ngay sinh (dd/mm/yyyy)   : ";
+	int y = wherey();
+	temp.Info.Birthday = GetDay(StringSize("Ngay sinh (dd/mm/yyyy)   : "), y);
+	cout << "Gioi tinh (Nam-1 / Nu-0) : ";
+	cin >> temp.Info.Sex;
+	if (temp.Info.Sex != 1 && temp.Info.Sex != 0)
+	{
+		temp.Info.Sex = -1;
 	}
-	else
+	cout << "CMND                     : ";
+	do {
+		getline(cin, temp.Info.CitizenId);
+		if (CheckIDCard(temp.Info.CitizenId) == false)
+		{
+			gotoxy(StringSize("CMND                     : "), y);
+		}
+	} while (CheckIDCard(temp.Info.CitizenId) == false);
+	cout << "Dia chi                  : ";
+	getline(cin, temp.Info.Address);
+	cout << "Email                    : ";
+	getline(cin, temp.Info.Email);
+	cout << "Ngay lap the (dd/mm/yyyy): ";
+	time_t now;
+	time(&now);
+	temp.Mfg = MfgGenerate(now);
+	DisplayDay(temp.Mfg);
+	cout << endl;
+	temp.Exp = ExpGenerate(now);
+	cout << "Ngay het han (dd/mm/yyy): ";
+	DisplayDay(temp.Exp);
+	cout << endl << "Nhan 'y' de xac nhan them doc gia, nhan bat ky de huy thao tac: ";
+	int check = _getch();
+	if (check == (int) 'y')
 	{
-		cin.ignore();
-		cout << "Ho va ten                : ";
-		getline(cin, temp.Info.Name);
-		cout << "Ngay sinh (dd/mm/yyyy)   : ";
-		int y = wherey();
-		temp.Info.Birthday = GetDay(StringSize("Ngay sinh (dd/mm/yyyy)   : "), y);
-		cout << "Gioi tinh (Nam-1 / Nu-0) : ";
-		cin >> temp.Info.Sex;
-		if (temp.Info.Sex != 1 && temp.Info.Sex != 0)
-		{
-			temp.Info.Sex = -1;
-		}
-		cout << "CMND                     : ";
-		do {
-			cin.ignore();
-			getline(cin, temp.Info.CitizenId);
-			if (CheckIDCard(temp.Info.CitizenId) == false)
-			{
-				cout << "CMND nhap sai" << endl;
-				cout << "Moi nhap lai" << endl;
-			}
-		} while (CheckIDCard(temp.Info.CitizenId) == false);
-		cout << "Dia chi                  : ";
-		getline(cin, temp.Info.Address);
-		cout << "Email                    : ";
-		getline(cin, temp.Info.Email);
-		cout << "Ngay lap the (dd/mm/yyyy): ";
-		time_t now;
-		time(&now);
-		temp.Mfg = MfgGenerate(now);
-		DisplayDay(temp.Mfg);
-		cout << endl;
-		temp.Exp = ExpGenerate(now);
-		cout << "Ngay het han (dd/mm/yyy): ";
-		DisplayDay(temp.Exp);
-		cout << endl << "Nhan 'y' de xac nhan them doc gia, nhan bat ky de huy thao tac: ";
-		int check = _getch();
-		if (check == (int) 'y')
-		{
-			AddReaderToList(l, temp);
-			cout << endl << "Tao doc gia thanh cong! " << endl;
-		}
-		else {
-			cout << "Thao tac da bi huy!" << endl;
-		}
+		AddReaderToList(l, temp);
+		cout << endl << "Tao doc gia thanh cong! " << endl;
+	}
+	else {
+		cout << "Thao tac da bi huy!" << endl;
 	}
 }
 Date ExpGenerate(time_t now)

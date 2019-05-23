@@ -1,5 +1,37 @@
 #include "PublicFunc.h"
-
+bool AvoidAllSpace(string text)
+{
+	int count = 0;
+	int n = StringSize(text);
+	for (int i = 0; i < n; i++)
+	{
+		if (text[i] != ' ')
+		{
+			return false;
+		}
+	}
+	return true;
+}
+string AvoidNullString(string text)
+{
+	int y = wherey();
+	string returntext;
+	do
+	{
+		getline(cin,returntext);
+		if (returntext.empty() == true || (returntext.empty()==false && AvoidAllSpace(returntext)==true))
+		{
+			gotoxy(0, y);
+			for (int i = 0; i < StringSize(text)+StringSize(returntext); i++)
+			{
+				cout << " ";
+			}
+			gotoxy(0, y);
+			cout << text;
+		}
+	} while (returntext.empty() == true || (returntext.empty() == false && AvoidAllSpace(returntext) == true));
+	return returntext;
+}
 void DisplayDay(Date date)
 {
 	if (date.d < 10) {
@@ -151,10 +183,19 @@ string EncryptPassWord(string pass)
 	}
 	return encrypt;
 }
-string HidePassword(int x, int y)
+string HidePassword(int x, int y,int status)
 {
 	string password;
 	char keypressed;
+	int threshold;
+	if (status == 1)
+	{
+		threshold = 0;
+	}
+	if (status == 0)
+	{
+		threshold = 6;
+	}
 	for (;;)
 	{
 		keypressed = NULL;
@@ -176,9 +217,9 @@ string HidePassword(int x, int y)
 			int n = static_cast<int>(password.length());
 			gotoxy(x + n, y);
 		}
-		else if (keypressed == 13)
+		else if (keypressed == 13 && StringSize(password) >= threshold)
 		{
-			break;
+				break;
 		}
 	}
 	return password;
@@ -221,11 +262,11 @@ void Pause()
 	_getch();
 }
 
-string printRandomNumber()
+string printRandomNumber(int n)
 {
 	char num[10] = { '1','2','3','4','5','6','7','8','9','0' };
 	string text = "";
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < n; i++)
 	{
 		text = text + num[rand() % 10];
 	}
@@ -245,3 +286,27 @@ string printRandomString()
 	}
 	return text;
 }
+void stream2hex(const std::string str, std::string& hexstr)
+{
+	bool capital = false;
+	hexstr.resize(str.size() * 2);
+	const size_t a = capital ? 'A' - 1 : 'a' - 1;
+
+	for (size_t i = 0, c = str[0] & 0xFF; i < hexstr.size(); c = str[i / 2] & 0xFF)
+	{
+		hexstr[i++] = c > 0x9F ? (c / 16 - 9) | a : c / 16 | '0';
+		hexstr[i++] = (c & 0xF) > 9 ? (c % 16 - 9) | a : c % 16 | '0';
+	}
+}
+
+void hex2stream(const std::string hexstr, std::string& str)
+{
+	str.resize((hexstr.size() + 1) / 2);
+
+	for (size_t i = 0, j = 0; i < str.size(); i++, j++)
+	{
+		str[i] = (hexstr[j] & '@' ? hexstr[j] + 9 : hexstr[j]) << 4, j++;
+		str[i] |= (hexstr[j] & '@' ? hexstr[j] + 9 : hexstr[j]) & 0xF;
+	}
+}
+

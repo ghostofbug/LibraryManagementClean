@@ -4,7 +4,7 @@ User Admin()
 {
 	User admin;
 	admin.UserId = "useradmin";
-	admin.PassWord = "4638";
+	admin.PassWord = "123456";
 	admin.Pos = 1;
 	admin.Info.Birthday.d = 1;
 	admin.Info.Birthday.m = 1;
@@ -26,7 +26,8 @@ void CreateAdmin(UserList &list, User ADmin, NodeUser *NodeAdmin)
 		AddTail(list, NodeAdmin);
 		ofstream addadmin;
 		addadmin.open("systemadmin.txt");
-		addadmin << NodeAdmin->node.UserId << "," << EncryptPassWord(NodeAdmin->node.PassWord) << "," << NodeAdmin->node.Info.Name << ",";
+		stream2hex(NodeAdmin->node.PassWord, NodeAdmin->node.PassWord);
+		addadmin << NodeAdmin->node.UserId << "," << NodeAdmin->node.PassWord << "," << NodeAdmin->node.Info.Name << ",";
 		addadmin << NodeAdmin->node.Info.Email << "," << NodeAdmin->node.Info.Address << "," << NodeAdmin->node.Info.CitizenId << ",";
 		addadmin << NodeAdmin->node.Info.Birthday.d << "," << NodeAdmin->node.Info.Birthday.m << "," << NodeAdmin->node.Info.Birthday.y << "," << NodeAdmin->node.Info.Sex << ",";
 		addadmin << NodeAdmin->node.Pos << "," << NodeAdmin->node.Stats << endl;
@@ -39,11 +40,10 @@ void CreateAdmin(UserList &list, User ADmin, NodeUser *NodeAdmin)
 		addamin.open("systemadmin.txt");
 		getline(addamin, admin.UserId, ',');
 		getline(addamin, admin.PassWord, ',');
-		admin.PassWord = EncryptPassWord(admin.PassWord);
+		hex2stream(admin.PassWord,admin.PassWord);
 		getline(addamin, admin.Info.Name, ',');
 		getline(addamin, admin.Info.Email, ',');
 		getline(addamin, admin.Info.Address, ',');
-		admin.Info.Address = EncryptPassWord(admin.Info.Address);
 		getline(addamin, admin.Info.CitizenId, ',');
 		addamin >> admin.Info.Birthday.d;
 		addamin.seekg(1, 1);
@@ -98,24 +98,26 @@ User Register(UserList list)
 	cout << "LUU Y: Cac thong tin (*) la bat buoc, cac thong tin khac co the bo qua " << endl;
 	cout << "----------------------------------------------------------------------" << endl;
 	cout << "(*) Ten nguoi dung       : ";
-	getline(cin, user.Info.Name);
+	user.Info.Name = AvoidNullString("(*) Ten nguoi dung       : ");
 	cout << "(*) Ten dang nhap        : ";
-	getline(cin, user.UserId);
+	user.UserId = AvoidNullString("(*) Ten dang nhap        : ");
 	NodeUser *temp = new NodeUser;
 	if (CheckCreateAccount(list, user.UserId, temp) == false)
 	{
 		cout << "Ten dang nhap da ton tai, moi dang ky lai" << endl;
+		user.success = false;
 
 	}
 	else
 	{
-		cout << "(*) Mat khau             : ";
+		cout << "(*) Mat khau(co it nhat 6 ky tu)         : ";
 		int y = wherey();
-		user.PassWord = HidePassword(wherex(), y);
+		user.PassWord = HidePassword(wherex(), y,0);
 		cout << "" << endl;
 		if (CheckSame(user.UserId, user.PassWord) == false)
 		{
 			cout << "Mat khau trung ten dang nhap, moi dang ky lai!" << endl;
+			user.success = false;
 		}
 		else
 		{
@@ -164,6 +166,7 @@ User Register(UserList list)
 			getline(cin, user.Info.Email);
 			user.Stats = 1;
 			cout << "Dang ky thanh cong!" << endl << "Tai khoan dang bi khoa!" << endl;
+			user.success = true;
 		}
 	}
 	delete temp;
@@ -171,7 +174,6 @@ User Register(UserList list)
 }
 void GrantPermission(UserList &list, NodeUser * temp, NodeUser *temp1)
 {
-
 	system("cls");
 	int runtime = 0;
 	for (;;)
@@ -225,9 +227,8 @@ void GrantPermission(UserList &list, NodeUser * temp, NodeUser *temp1)
 		}
 		string text;
 		string validate;
-		int y = wherey();
-		
 		cout << "Nhan Y de phan quyen,nhan bat ky de thoat: ";
+		int y = wherey();
 		if (runtime == 0)
 		{
 			cin.ignore();
@@ -399,21 +400,22 @@ void ListToFile(UserList list)
 	addfile.open("useraccount.txt");
 	for (temp = list.listhead; temp != NULL; temp = temp->next)
 	{
+		stream2hex(temp->node.PassWord, temp->node.PassWord);
 		if (temp->node.Pos == 1 && temp->node.UserId.compare("useradmin") == 0)
 		{
 			ofstream addadmin;
 			addadmin.open("systemadmin.txt");
-			addadmin << temp->node.UserId << "," << EncryptPassWord(temp->node.PassWord) << "," << temp->node.Info.Name << ",";
-			addadmin << temp->node.Info.Email << "," << EncryptPassWord(temp->node.Info.Address) << "," << temp->node.Info.CitizenId << ",";
+			addadmin << temp->node.UserId << "," << temp->node.PassWord << "," << temp->node.Info.Name << ",";
+			addadmin << temp->node.Info.Email << "," << temp->node.Info.Address<< "," << temp->node.Info.CitizenId << ",";
 			addadmin << temp->node.Info.Birthday.d << "," << temp->node.Info.Birthday.m << "," << temp->node.Info.Birthday.y << "," << temp->node.Info.Sex << "," << temp->node.Pos << "," << temp->node.Stats << endl;
 			addadmin.close();
 		}
 		else
 		{
-
-			addfile << temp->node.UserId << "," << EncryptPassWord(temp->node.PassWord) << ",";
+			
+			addfile << temp->node.UserId << "," <<temp->node.PassWord  << ",";
 			addfile << temp->node.Info.CitizenId << ",";
-			addfile << EncryptPassWord(temp->node.Info.Address) << ",";
+			addfile << temp->node.Info.Address << ",";
 			addfile << temp->node.Info.Email << ",";
 			addfile << temp->node.Info.Name << ",";
 			addfile << temp->node.Info.Birthday.d << "," << temp->node.Info.Birthday.m << "," << temp->node.Info.Birthday.y << ",";
@@ -434,10 +436,9 @@ void AddFileTolist(UserList &list, NodeUser *user)
 	{
 		getline(adddata, temp.UserId, ',');
 		getline(adddata, temp.PassWord, ',');
-		temp.PassWord = EncryptPassWord(temp.PassWord);
+		hex2stream(temp.PassWord,temp.PassWord);
 		getline(adddata, temp.Info.CitizenId, ',');
 		getline(adddata, temp.Info.Address, ',');
-		temp.Info.Address = EncryptPassWord(temp.Info.Address);
 		getline(adddata, temp.Info.Email, ',');
 		getline(adddata, temp.Info.Name, ',');
 		adddata >> temp.Info.Birthday.d;

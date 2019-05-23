@@ -22,6 +22,7 @@ struct User {
 	PersonInfo Info;
 	int Stats; //
 	int Pos; //defined above
+	bool success;
 };
 
 struct NodeUser {
