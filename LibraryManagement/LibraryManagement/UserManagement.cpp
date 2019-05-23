@@ -46,8 +46,8 @@ void CreateAdmin(UserList &list, User ADmin, NodeUser *NodeAdmin)
 		hex2stream(admin.PassWord,admin.PassWord);
 		getline(addamin, admin.Info.Name, ',');
 		getline(addamin, admin.Info.Email, ',');
-		hex2stream(admin.Info.Email, admin.Info.Email);
 		getline(addamin, admin.Info.Address, ',');
+		hex2stream(admin.Info.Address, admin.Info.Address);
 		getline(addamin, admin.Info.CitizenId, ',');
 		addamin >> admin.Info.Birthday.d;
 		addamin.seekg(1, 1);
